@@ -10,7 +10,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// playerCode
         /// </value>
-        [JsonPropertyName("User")]
+        [JsonPropertyName("user")]
         public string User { get; init; } = default!;
         /// <summary>
         /// 注单号
@@ -94,7 +94,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         public string WinLoss { get; init; } = default!;
         /// <summary>
         /// IP
-        /// </summary>        
+        /// </summary>
         [JsonPropertyName("ip")]
         public string Ip { get; init; } = default!;
         /// <summary>

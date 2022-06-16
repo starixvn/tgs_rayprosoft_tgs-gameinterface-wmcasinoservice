@@ -24,7 +24,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// 帐号
         /// </summary>
         [JsonPropertyName("user")]
-        public string User { get; init; } = default!;
+        public string? User { get; init; }
         /// <summary>
         /// WMCasino对该次交易纪录的编号
         /// </summary>
@@ -39,11 +39,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// 例:20190314000000 (2019年03月14日00時00分00秒)
         /// </summary>
         [JsonPropertyName("startTime")]
-        public string StartTime { get; init; } = default!;
+        public string? StartTime { get; init; }
         /// <summary>
         /// 例:20190314235959 (2019年03月14日23時59分59秒)
         /// </summary>
         [JsonPropertyName("endTime")]
-        public string EndTime { get; init; } = default!;
+        public string? EndTime { get; init; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
@@ -149,7 +150,13 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 {
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<GetDateTimeReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
+                    Result = JsonSerializer.Deserialize<GetDateTimeReportResult[]>(document.RootElement.GetProperty("result").GetRawText(), new JsonSerializerOptions
+                    {
+                        Converters =
+                        {
+                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                        }
+                    })!
                 };
             }
             else if (errorCode == 107)
@@ -176,17 +183,23 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["cmd"] = "GetMemberTradeReport",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["user"] = request.User,
-                ["startTime"] = request.StartTime,
-                ["endTime"] = request.EndTime,
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
+
+            if (request.User != null)
+                parameters.Add("user", request.User.ToString());
 
             if (request.OrderId != null)
                 parameters.Add("orderid", request.OrderId);
 
             if (request.Order != null)
                 parameters.Add("order", request.Order);
+
+            if (request.StartTime != null)
+                parameters.Add("startTime", request.StartTime.ToString());
+
+            if (request.EndTime != null)
+                parameters.Add("endTime", request.EndTime.ToString());
 
             var document = await PostAsync(apiUrl, "", parameters, "GetMemberTradeReport", cancellationToken);
 
@@ -252,7 +265,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                     Result = JsonSerializer.Deserialize<GetUnsettleReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
                 };
             }
-            else if(errorCode == 107)
+            else if (errorCode == 107)
             {
                 return new GetUnsettleReportResponse
                 {

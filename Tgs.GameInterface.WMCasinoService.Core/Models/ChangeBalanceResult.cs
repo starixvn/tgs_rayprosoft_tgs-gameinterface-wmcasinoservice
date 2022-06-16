@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <summary>
         /// WMCasino此次交易的单号<br />
         /// 例如:2147647425
-        /// </summary>        
+        /// </summary>
         [JsonPropertyName("orderId")]
         public string OrderId { get; init; } = default!;
         /// <summary>

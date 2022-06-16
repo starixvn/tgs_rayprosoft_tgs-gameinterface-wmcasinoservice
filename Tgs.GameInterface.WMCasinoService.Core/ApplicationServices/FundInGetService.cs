@@ -19,7 +19,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 VendorId = query.VendorId,
                 Signature = query.Signature,
                 User = query.PlayerCode,
-                Money = - query.Amount,
+                Money = -query.Amount,
                 Order = query.TransactionId
             };
 

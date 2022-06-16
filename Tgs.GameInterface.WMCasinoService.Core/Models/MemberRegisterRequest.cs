@@ -6,11 +6,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
     {
         /// <summary>
         /// 代理商(aid)
-        /// </summary>        
+        /// </summary>
         public string VendorId { get; init; } = default!;
         /// <summary>
         /// 代理商标识符
-        /// </summary>        
+        /// </summary>
         public string Signature { get; init; } = default!;
         /// <summary>
         /// 账号<br />
@@ -30,6 +30,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// 最大值:30字符
         /// </summary>
         [JsonPropertyName("username")]
-        public string Username { get; init; } = default!;       
+        public string Username { get; init; } = default!;
     }
 }

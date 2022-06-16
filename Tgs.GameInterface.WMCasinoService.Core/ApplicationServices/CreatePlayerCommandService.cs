@@ -22,7 +22,9 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 User = command.PlayerCode,
                 Username = command.PlayerCode
             };
-            _ = await _client.MemberRegisterAsync(command.ApiUrl, request, cancellationToken).ConfigureAwait(false);
+            _ = await _client
+                .MemberRegisterAsync(command.ApiUrl, request, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

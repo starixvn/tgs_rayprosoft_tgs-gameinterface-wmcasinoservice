@@ -192,6 +192,57 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 result.Balance);
         }
 
+        [HttpPost("game/pullrecord")]
+        public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
+                    [FromServices] IQueryService<GamePullRecordQuery, GamePullRecordResult> service,
+                    GamePullRecordQueryViewModel model)
+        {
+            var result = await service
+                .QueryAsync(new GamePullRecordQuery(
+                    model.ApiUrl,
+                    model.VendorId,
+                    model.Signature,
+                    model.StartTime,
+                    model.EndTime,
+                    model.PlayerCode))
+                .ToArrayAsync()
+                .ConfigureAwait(false);
+
+            if (!result.Any())
+                yield break;
+
+            foreach (var item in result)
+            {
+                yield return new GamePullRecordResultViewModel
+                {
+                    BeforeCash = item.BeforeCash,
+                    Bet = item.Bet,
+                    BetCode = item.BetCode,
+                    BetId = item.BetId,
+                    BetResult = item.BetResult,
+                    BetTime = item.BetTime,
+                    Commission = item.Commission,
+                    Event = item.Event,
+                    EventChild = item.EventChild,
+                    GameResult = item.GameResult,
+                    Gid = item.Gid,
+                    Gname = item.Gname,
+                    Ip = item.Ip,
+                    Reset = item.Reset,
+                    Result = item.Result,
+                    Round = item.Round,
+                    Settime = item.Settime,
+                    Subround = item.Subround,
+                    TableId = item.TableId,
+                    User = item.User,
+                    Validbet = item.Validbet,
+                    Water = item.Water,
+                    Waterbet = item.Waterbet,
+                    WinLoss = item.WinLoss
+                };
+            }
+        }
+
         /// <summary>
         /// Gets the game un settle asynchronous.
         /// </summary>
@@ -243,6 +294,60 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     Subround = item.Subround,
                     TableId = item.TableId,
                     User = item.User,
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the member trade report.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
+        ///             "vendorId": "hpg02twapi",
+        ///             "signature": "89448b444ed2e922ddc3aa0753370238",
+        ///             "playerCode": "4ucmqplxb029"
+        ///         }
+        /// </remarks>
+        [HttpPost("transaction")]
+        public async IAsyncEnumerable<MemberTradeViewModel> GetMemberTradeReport(
+                    [FromServices] IQueryService<MemberTradeQuery, MemberTradeResult> service,
+                    MemberTradeQueryViewModel model)
+        {
+            var result = await service
+                .QueryAsync(new MemberTradeQuery(
+                    model.ApiUrl,
+                    model.VendorId,
+                    model.Signature,
+                    model.StartTime,
+                    model.EndTime,
+                    model.PlayerCode,
+                    model.TransactionId,
+                    model.GameProviderTransactionId))
+                .ToArrayAsync()
+                .ConfigureAwait(false);
+
+            if (!result.Any())
+                yield break;
+
+            foreach (var item in result)
+            {
+                yield return new MemberTradeViewModel
+                {
+                    AddTime = item.AddTime,
+                    Mid = item.Mid,
+                    Money = item.Money,
+                    OpCode = item.OpCode,
+                    OrderId = item.OrderId,
+                    OrderNum = item.OrderNum,
+                    SubTotal = item.SubTotal,
+                    User = item.User
                 };
             }
         }
