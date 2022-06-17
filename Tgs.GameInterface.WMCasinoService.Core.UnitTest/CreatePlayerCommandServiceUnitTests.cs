@@ -43,7 +43,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
 
             await sut.ExecuteAsync(query).ConfigureAwait(false);
 
-            _ = fakeClient
+            _ = await fakeClient
                 .Received(1)
                 .MemberRegisterAsync(apiUrl: Arg.Is(apiUrl), Arg.Is(request));
         }
