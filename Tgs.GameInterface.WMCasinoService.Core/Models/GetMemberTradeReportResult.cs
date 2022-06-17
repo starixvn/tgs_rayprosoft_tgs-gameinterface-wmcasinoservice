@@ -37,10 +37,12 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         [JsonPropertyName("money")]
         public string Money { get; init; } = default!;
         /// <summary>
-        /// 加扣点代码:加点(121)扣点(122)
+        /// 加扣点代码:<br/>
+        /// 轉點的加扣點加点(121)扣点(122)<br/>
+        /// 開獎的加扣點加点(501)扣点(502)
         /// </summary>
         /// <value>
-        /// 121
+        /// 121、122、501、502
         /// </value>
         [JsonPropertyName("op_code")]
         public string OpCode { get; init; } = default!;
