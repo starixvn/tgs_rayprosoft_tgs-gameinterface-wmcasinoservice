@@ -19,8 +19,8 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
             {
                 VendorId = query.VendorId,
                 Signature = query.Signature,
-                StartTime = query.StartTime.ToString("yyyyMMddHHmmss"),
-                EndTime = query.EndTime?.ToString("yyyyMMddHHmmss"),
+                StartTime = query.StartTime,
+                EndTime = query.EndTime,
                 User = query.PlayerCode,
             };
 

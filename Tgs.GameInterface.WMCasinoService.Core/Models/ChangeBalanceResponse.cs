@@ -32,6 +32,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         public string ErrorMessage { get; init; } = default!;
 
         [JsonPropertyName("result")]
-        public ChangeBalanceResult Result { get; init; } = default!;
+        public ChangeBalanceResult? Result { get; init; }
     }
 }

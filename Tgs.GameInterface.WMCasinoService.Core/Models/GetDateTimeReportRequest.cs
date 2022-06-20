@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Tgs.GameInterface.WMCasinoService.Core.Models
+﻿namespace Tgs.GameInterface.WMCasinoService.Core.Models
 {
     /// <summary>
     /// 如欲查询全部用户就不用输入user，会以时间区间进行呈现。<br />
@@ -11,12 +9,10 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <summary>
         /// 代理商(aid)
         /// </summary>
-        [JsonPropertyName("vendorId")]
         public string VendorId { get; init; } = default!;
         /// <summary>
         /// 代理商标识符
         /// </summary>
-        [JsonPropertyName("signature")]
         public string Signature { get; init; } = default!;
         /// <summary>
         /// 帐号
@@ -24,35 +20,32 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// playerCode
         /// </value>
-        [JsonPropertyName("user")]
         public string? User { get; init; }
         /// <summary>
-        /// 例:20170809130500 (2017年08月09日 13点05分00
+        /// Gets the start time.
         /// </summary>
         /// <value>
         /// The start time.
         /// </value>
-        [JsonPropertyName("startTime")]
-        public string StartTime { get; init; } = default!;
+        public DateTime StartTime { get; init; } = default!;
         /// <summary>
-        /// 例:20170809130600 (2017年08月09日 13点06分00秒)
+        /// Gets the end time.
         /// </summary>
-        [JsonPropertyName("endTime")]
-        public string? EndTime { get; init; }
+        /// <value>
+        /// The end time.
+        /// </value>
+        public DateTime? EndTime { get; init; }
         /// <summary>
         /// 0:抓下注时间, 1:抓结算时间
         /// </summary>
-        [JsonPropertyName("timetype")]
         public int? TimeType { get; init; }
         /// <summary>
         /// 0:输赢报表, 1:小费报表, 2:全部
         /// </summary>
-        [JsonPropertyName("datatype")]
         public int? DataType { get; init; }
         /// <summary>
         /// 期数
         /// </summary>
-        [JsonPropertyName("gameno1")]
         public int? GameNo1 { get; init; }
     }
 }

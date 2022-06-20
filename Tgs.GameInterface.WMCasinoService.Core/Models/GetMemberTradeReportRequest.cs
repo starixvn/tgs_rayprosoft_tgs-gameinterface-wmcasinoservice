@@ -12,38 +12,37 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
     {
         /// <summary>
         /// 代理商(aid)
-        /// </summary>
-        [JsonPropertyName("vendorId")]
+        /// </summary>        
         public string VendorId { get; init; } = default!;
         /// <summary>
         /// 代理商标识符
-        /// </summary>
-        [JsonPropertyName("signature")]
+        /// </summary>        
         public string Signature { get; init; } = default!;
         /// <summary>
         /// 帐号
-        /// </summary>
-        [JsonPropertyName("user")]
+        /// </summary>        
         public string? User { get; init; }
         /// <summary>
         /// WMCasino对该次交易纪录的编号
-        /// </summary>
-        [JsonPropertyName("orderid")]
+        /// </summary>        
         public string? OrderId { get; init; }
         /// <summary>
         /// PG对该次交易纪录自定的订单编号
-        /// </summary>
-        [JsonPropertyName("order")]
+        /// </summary>        
         public string? Order { get; init; }
         /// <summary>
-        /// 例:20190314000000 (2019年03月14日00時00分00秒)
+        /// Gets the start time.
         /// </summary>
-        [JsonPropertyName("startTime")]
-        public string? StartTime { get; init; }
+        /// <value>
+        /// The start time.
+        /// </value>        
+        public DateTime? StartTime { get; init; }
         /// <summary>
-        /// 例:20190314235959 (2019年03月14日23時59分59秒)
+        /// Gets the end time.
         /// </summary>
-        [JsonPropertyName("endTime")]
-        public string? EndTime { get; init; }
+        /// <value>
+        /// The end time.
+        /// </value>        
+        public DateTime? EndTime { get; init; }
     }
 }

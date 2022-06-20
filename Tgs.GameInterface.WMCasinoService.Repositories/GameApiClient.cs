@@ -35,7 +35,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, "", parameters, "ChangeBalance", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken);
 
             if (document is null)
             {
@@ -72,7 +72,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, "", parameters, "GetBalance", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "GetBalance", cancellationToken);
 
             if (document is null)
             {
@@ -116,7 +116,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["cmd"] = "GetDateTimeReport",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["startTime"] = request.StartTime,
+                ["startTime"] = request.StartTime.ToString("yyyyMMddHHmmss"),
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
@@ -124,7 +124,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 parameters.Add("user", request.User);
 
             if (request.EndTime != null)
-                parameters.Add("endTime", request.EndTime);
+                parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
             if (request.TimeType != null)
                 parameters.Add("timetype", request.TimeType.Value.ToString());
@@ -135,7 +135,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             if (request.GameNo1 != null)
                 parameters.Add("gameno1", request.GameNo1.Value.ToString());
 
-            var document = await PostAsync(apiUrl, "", parameters, "GetDateTimeReport", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken);
 
             if (document is null)
             {
@@ -150,13 +150,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 {
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<GetDateTimeReportResult[]>(document.RootElement.GetProperty("result").GetRawText(), new JsonSerializerOptions
-                    {
-                        Converters =
-                        {
-                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                        }
-                    })!
+                    Result = JsonSerializer.Deserialize<GetDateTimeReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
                 };
             }
             else if (errorCode == 107)
@@ -196,12 +190,12 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 parameters.Add("order", request.Order);
 
             if (request.StartTime != null)
-                parameters.Add("startTime", request.StartTime.ToString());
+                parameters.Add("startTime", request.StartTime.Value.ToString("yyyyMMddHHmmss"));
 
             if (request.EndTime != null)
-                parameters.Add("endTime", request.EndTime.ToString());
+                parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
-            var document = await PostAsync(apiUrl, "", parameters, "GetMemberTradeReport", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "GetMemberTradeReport", cancellationToken);
 
             if (document is null)
             {
@@ -247,7 +241,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, "", parameters, "GetUnsettleReport", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken);
 
             if (document is null)
             {
@@ -291,12 +285,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["signature"] = signature
             };
 
-            var document = await PostAsync(
-                apiUrl,
-                "",
-                parameters,
-                "Hello",
-                cancellationToken).ConfigureAwait(false);
+            var document = await PostAsync(apiUrl, parameters, "Hello", cancellationToken).ConfigureAwait(false);
 
             return new HelloResponse
             {
@@ -316,7 +305,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["user"] = request.User == null ? string.Empty : request.User.ToString(),
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
             };
-            var document = await PostAsync(apiUrl, "", parameters, "LogoutGame", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "LogoutGame", cancellationToken);
 
             if (document is null)
             {
@@ -354,7 +343,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
             };
 
-            var document = await PostAsync(apiUrl, "", parameters, "MemberRegister", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "MemberRegister", cancellationToken);
 
             if (document is null)
             {
@@ -393,7 +382,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
             };
 
-            var document = await PostAsync(apiUrl, "", parameters, "SigninGame", cancellationToken);
+            var document = await PostAsync(apiUrl, parameters, "SigninGame", cancellationToken);
 
             if (document is null)
             {
@@ -419,12 +408,11 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             }
         }
 
-        private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
+        private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
         {
             logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
 
             var sw = Stopwatch.StartNew();
-            var url = new Uri(apiUrl, path);
 
             HttpContent content = new FormUrlEncodedContent(parameters);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
@@ -432,7 +420,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 CharSet = "UTF-8"
             };
 
-            var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+            var httpResponseMessage = await _client.PostAsync(apiUrl, content, cancellationToken);
 
             sw.Stop();
 

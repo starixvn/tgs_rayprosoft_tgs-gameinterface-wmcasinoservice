@@ -30,7 +30,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 .ConfigureAwait(false);
 
             return new FundInResult(
-                GameProviderTransactionId: result.Result.OrderId,
+                GameProviderTransactionId: result.Result!.OrderId,
                 TransactionId: result.Result.YourOrderNum,
                 CurrentBalance: decimal.Parse(result.Result.Cash));
         }

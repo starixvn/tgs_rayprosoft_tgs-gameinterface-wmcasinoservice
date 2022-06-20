@@ -35,7 +35,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                StartTime = startTime.ToString("yyyyMMddHHmmss"),
+                StartTime = startTime,
                 EndTime = null,
                 User = null,
                 DataType = null,
