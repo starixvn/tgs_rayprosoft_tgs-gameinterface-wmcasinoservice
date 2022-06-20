@@ -1,6 +1,11 @@
-﻿namespace Tgs.GameInterface.WMCasinoService.GrpcServices
+﻿using Tgs.GameInterface.WMCasinoService.Protos;
+
+namespace Tgs.GameInterface.WMCasinoService.GrpcServices
 {
-    public class GameInterfaceWMCasinoGrpcService
+    public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.GameInterfaceWMCasinoServiceBase
     {
+        public GameInterfaceWMCasinoGrpcService()
+        {
+        }
     }
 }

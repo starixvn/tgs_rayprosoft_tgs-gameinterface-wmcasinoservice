@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\gameinterfacewmcasinoservice.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Interfaces\" />
-    <Folder Include="Protos\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +34,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Tgs.GameInterface.WMCasinoService.Core\Tgs.GameInterface.WMCasinoService.Core.csproj" />
     <ProjectReference Include="..\Tgs.GameInterface.WMCasinoService.Repositories\Tgs.GameInterface.WMCasinoService.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\gameinterfacewmcasinoservice.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>
