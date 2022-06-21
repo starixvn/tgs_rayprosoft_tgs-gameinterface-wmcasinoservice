@@ -35,16 +35,16 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
                         user = "4ucmqplxb029",
                         betId="179229908",
                         gid="108",
-                        _event="113060931",
+                        @event="113060931",
                         eventChild="97",
                         betTime="2022-06-20 09:37:25",
                         betResult="小",
                         bet="20.0000",
                         tableId="1",
                         commission="0",
-                        round="113060931",
-                        subround="97",
-                        gname="色碟"
+                        round = "113060931",
+                        subround ="97",
+                        gname ="色碟"
                     }
                 }
             };
@@ -69,6 +69,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var result = await client.GetUnsettleReportAsync(apiUrl, request);
 
             Assert.AreEqual(response.result.First().round, result.Result.First().Round);
+            Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
         }
     }
 }

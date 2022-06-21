@@ -50,7 +50,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                         TableId = "201",
                         Commission = "0",
                         Round = "113055702",
-                        Subround = "50",
+                        SubRound = "50",
                         Gname = "百家乐"
                     }
                 }

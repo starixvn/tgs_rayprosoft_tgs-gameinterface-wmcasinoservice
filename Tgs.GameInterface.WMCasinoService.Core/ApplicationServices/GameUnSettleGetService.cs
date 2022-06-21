@@ -42,7 +42,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                     Gid = item.Gid,
                     Gname = item.Gname,
                     Round = item.Round,
-                    Subround = item.Subround,
+                    Subround = item.SubRound,
                     TableId = item.TableId,
                     User = item.User,
                 };

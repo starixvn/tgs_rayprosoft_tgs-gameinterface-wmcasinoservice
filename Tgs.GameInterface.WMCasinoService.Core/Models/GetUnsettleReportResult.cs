@@ -71,7 +71,7 @@
         /// <summary>
         /// 子场次编号
         /// </summary>
-        public string Subround { get; init; } = default!;
+        public string SubRound { get; init; } = default!;
         /// <summary>
         /// 游戏名称ex:百家乐
         /// </summary>

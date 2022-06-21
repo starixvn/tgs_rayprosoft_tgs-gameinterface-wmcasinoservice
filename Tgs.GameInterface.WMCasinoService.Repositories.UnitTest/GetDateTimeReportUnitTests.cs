@@ -87,7 +87,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
                         winLoss = "-50.0000",
                         ip = "220.132.206.70",
                         gid = "102",
-                        _event = "113057686",
+                        @event = "113057686",
                         eventChild = "34",
                         round = "113057686",
                         subround = "34",
@@ -127,6 +127,8 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var result = await client.GetDateTimeReportAsync(apiUrl, request);
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(response.result.First().round, result.Result.First().Round);
+            Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
         }
     }
 }

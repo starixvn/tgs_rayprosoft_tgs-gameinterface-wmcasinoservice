@@ -335,7 +335,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                         TableId = result.GetProperty("tableId").ToString(),
                         Commission = result.GetProperty("commission").ToString(),
                         Round = result.GetProperty("round").ToString(),
-                        Subround = result.GetProperty("subround").ToString(),
+                        SubRound = result.GetProperty("subround").ToString(),
                         Gname = result.GetProperty("gname").ToString()
                     }).ToArray()
                 };
