@@ -52,7 +52,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                     Result = item.Result,
                     Round = item.Round,
                     Settime = item.Settime,
-                    Subround = item.Subround,
+                    Subround = item.SubRound,
                     TableId = item.TableId,
                     User = item.User,
                     Validbet = item.Validbet,

@@ -19,7 +19,7 @@ service GameInterfaceWMCasinoService {
 	rpc KickAllPlayer (GameInterfaceWMCasinoServiceKickAllPlayersRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc GameUrl (GameInterfaceWMCasinoServiceGameUrlRequest) returns (GameInterfaceWMCasinoServiceGameUrlReply);
 	rpc GamePullRecord (GameInterfaceWMCasinoServiceGamePullRecordeRequest) returns (GameInterfaceWMCasinoServiceGamePullRecordReply);
-	rpc GameUnsettle (GameInterfaceWMCasinoServiceGameUnsettleRequest) returns (GameInterfaceWMCasinoServiceGameUnsettleRecordReply);	
+	rpc GameUnsettle (GameInterfaceWMCasinoServiceGameUnsettleRequest) returns (GameInterfaceWMCasinoServiceGameUnsettleRecordReply);		
 }
 
 message GameInterfaceWMCasinoServiceCreatePlayerRequest {

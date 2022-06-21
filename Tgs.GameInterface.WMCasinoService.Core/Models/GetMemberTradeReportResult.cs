@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Tgs.GameInterface.WMCasinoService.Core.Models
+﻿namespace Tgs.GameInterface.WMCasinoService.Core.Models
 {
     public record GetMemberTradeReportResult
     {
@@ -10,7 +8,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 2147647425
         /// </value>
-        [JsonPropertyName("orderid")]
         public string OrderId { get; init; } = default!;
         /// <summary>
         /// 该次交易纪录时间
@@ -18,15 +15,13 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 2022-06-13 09:53:57
         /// </value>
-        [JsonPropertyName("addtime")]
-        public string AddTime { get; init; } = default!;
+        public DateTimeOffset AddTime { get; init; }
         /// <summary>
         ///
         /// </summary>
         /// <value>
         /// 803799
         /// </value>
-        [JsonPropertyName("mid")]
         public string Mid { get; init; } = default!;
         /// <summary>
         /// 该次交易金额
@@ -34,8 +29,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 100.0000
         /// </value>
-        [JsonPropertyName("money")]
-        public string Money { get; init; } = default!;
+        public decimal Money { get; init; }
         /// <summary>
         /// 加扣点代码:<br/>
         /// 轉點的加扣點加点(121)扣点(122)<br/>
@@ -44,7 +38,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 121、122、501、502
         /// </value>
-        [JsonPropertyName("op_code")]
         public string OpCode { get; init; } = default!;
         /// <summary>
         /// 此用户目前余额
@@ -52,12 +45,10 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 100.0000
         /// </value>
-        [JsonPropertyName("subtotal")]
-        public string SubTotal { get; init; } = default!;
+        public decimal SubTotal { get; init; }
         /// <summary>
         /// 该次交易 PG自订单号
         /// </summary>
-        [JsonPropertyName("ordernum")]
         public string OrderNum { get; init; } = default!;
         /// <summary>
         /// 该次交易的帐号
@@ -65,7 +56,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// playerCode
         /// </value>
-        [JsonPropertyName("user")]
         public string User { get; init; } = default!;
     }
 }

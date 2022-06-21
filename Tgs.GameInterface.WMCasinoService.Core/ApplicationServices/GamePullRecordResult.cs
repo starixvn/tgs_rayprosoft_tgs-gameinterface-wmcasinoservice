@@ -22,42 +22,42 @@
         /// <value>
         /// 2022-06-13 09:55:10
         /// </value>
-        public string BetTime { get; init; } = default!;
+        public DateTimeOffset BetTime { get; init; }
         /// <summary>
         /// 下注前金额
         /// </summary>
         /// <value>
         /// 100.0000
         /// </value>
-        public string BeforeCash { get; init; } = default!;
+        public decimal BeforeCash { get; init; }
         /// <summary>
         /// 下注金额
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        public string Bet { get; init; } = default!;
+        public decimal Bet { get; init; }
         /// <summary>
         /// 有效下注
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        public string Validbet { get; init; } = default!;
+        public decimal Validbet { get; init; }
         /// <summary>
         /// 退水金额
         /// </summary>
         /// <value>
         /// 0.0000
         /// </value>
-        public string Water { get; init; } = default!;
+        public decimal Water { get; init; }
         /// <summary>
         /// 下注结果
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        public string Result { get; init; } = default!;
+        public decimal Result { get; init; } = default!;
         /// <summary>
         /// 下注代碼
         /// </summary>
@@ -71,14 +71,14 @@
         /// <value>
         /// 10.0000
         /// </value>
-        public string Waterbet { get; init; } = default!;
+        public decimal Waterbet { get; init; }
         /// <summary>
         /// 输赢金额
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        public string WinLoss { get; init; } = default!;
+        public decimal WinLoss { get; init; }
         /// <summary>
         /// IP
         /// </summary>
@@ -150,7 +150,7 @@
         /// <value>
         /// 2022-06-13 09:55:29
         /// </value>
-        public string Settime { get; init; } = default!;
+        public DateTimeOffset Settime { get; init; }
         /// <summary>
         /// Y:有重对, N:非重对
         /// </summary>

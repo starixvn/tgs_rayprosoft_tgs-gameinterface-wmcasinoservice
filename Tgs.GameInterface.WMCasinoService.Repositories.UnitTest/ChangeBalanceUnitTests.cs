@@ -68,7 +68,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
                 {
                     yourOrderNum = "42B69762-9471-E8C5-4BD7-4B8700D07049",
                     orderId = "2147648311",
-                    cash = "620"
+                    cash = 620m
                 }
             };
 

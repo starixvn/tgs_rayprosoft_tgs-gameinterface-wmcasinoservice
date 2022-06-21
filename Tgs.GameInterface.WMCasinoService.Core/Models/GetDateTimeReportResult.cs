@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Tgs.GameInterface.WMCasinoService.Core.Models
+﻿namespace Tgs.GameInterface.WMCasinoService.Core.Models
 {
     public record GetDateTimeReportResult
     {
@@ -10,7 +8,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// playerCode
         /// </value>
-        [JsonPropertyName("user")]
         public string User { get; init; } = default!;
         /// <summary>
         /// 注单号
@@ -18,7 +15,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 179228694
         /// </value>
-        [JsonPropertyName("betId")]
         public string BetId { get; init; } = default!;
         /// <summary>
         /// 下注時間
@@ -26,55 +22,48 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 2022-06-13 09:55:10
         /// </value>
-        [JsonPropertyName("betTime")]
-        public string BetTime { get; init; } = default!;
+        public DateTimeOffset BetTime { get; init; }
         /// <summary>
         /// 下注前金额
         /// </summary>
         /// <value>
         /// 100.0000
         /// </value>
-        [JsonPropertyName("beforeCash")]
-        public string BeforeCash { get; init; } = default!;
+        public decimal BeforeCash { get; init; }
         /// <summary>
         /// 下注金额
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        [JsonPropertyName("bet")]
-        public string Bet { get; init; } = default!;
+        public decimal Bet { get; init; }
         /// <summary>
         /// 有效下注
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        [JsonPropertyName("validbet")]
-        public string Validbet { get; init; } = default!;
+        public decimal Validbet { get; init; }
         /// <summary>
         /// 退水金额
         /// </summary>
         /// <value>
         /// 0.0000
         /// </value>
-        [JsonPropertyName("water")]
-        public string Water { get; init; } = default!;
+        public decimal Water { get; init; }
         /// <summary>
         /// 下注结果
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        [JsonPropertyName("result")]
-        public string Result { get; init; } = default!;
+        public decimal Result { get; init; }
         /// <summary>
         /// 下注代碼
         /// </summary>
         /// <value>
         /// Player
         /// </value>
-        [JsonPropertyName("betCode")]
         public string BetCode { get; init; } = default!;
         /// <summary>
         /// 下注退水金额
@@ -82,20 +71,17 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 10.0000
         /// </value>
-        [JsonPropertyName("waterbet")]
-        public string Waterbet { get; init; } = default!;
+        public decimal Waterbet { get; init; }
         /// <summary>
         /// 输赢金额
         /// </summary>
         /// <value>
         /// 10.0000
         /// </value>
-        [JsonPropertyName("winLoss")]
-        public string WinLoss { get; init; } = default!;
+        public decimal WinLoss { get; init; }
         /// <summary>
         /// IP
         /// </summary>
-        [JsonPropertyName("ip")]
         public string Ip { get; init; } = default!;
         /// <summary>
         /// 游戏类别编号
@@ -115,7 +101,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// 113:二八杠,
         /// 128:安達巴哈
         /// </value>
-        [JsonPropertyName("gid")]
         public string Gid { get; init; } = default!;
         /// <summary>
         /// 场次编号
@@ -123,7 +108,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 113053285
         /// </value>
-        [JsonPropertyName("event")]
         public string Event { get; init; } = default!;
         /// <summary>
         /// 子场次编号
@@ -131,7 +115,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 5
         /// </value>
-        [JsonPropertyName("eventChild")]
         public string EventChild { get; init; } = default!;
         /// <summary>
         /// 场次编号
@@ -139,7 +122,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 113053285
         /// </value>
-        [JsonPropertyName("round")]
         public string Round { get; init; } = default!;
         /// <summary>
         /// 子场次编号
@@ -147,15 +129,13 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 5
         /// </value>
-        [JsonPropertyName("subround")]
-        public string Subround { get; init; } = default!;
+        public string SubRound { get; init; } = default!;
         /// <summary>
         /// 桌台编号
         /// </summary>
         /// <value>
         /// 112
         /// </value>
-        [JsonPropertyName("tableId")]
         public string TableId { get; init; } = default!;
         /// <summary>
         /// 0:一般, 1:免佣
@@ -163,7 +143,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 0
         /// </value>
-        [JsonPropertyName("commission")]
         public string Commission { get; init; } = default!;
         /// <summary>
         /// 结算时间
@@ -171,15 +150,13 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 2022-06-13 09:55:29
         /// </value>
-        [JsonPropertyName("settime")]
-        public string Settime { get; init; } = default!;
+        public DateTimeOffset Settime { get; init; }
         /// <summary>
         /// Y:有重对, N:非重对
         /// </summary>
         /// <value>
         /// N
         /// </value>
-        [JsonPropertyName("reset")]
         public string Reset { get; init; } = default!;
         /// <summary>
         /// 下注内容 ex:"Banker"
@@ -187,7 +164,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 闲
         /// </value>
-        [JsonPropertyName("betResult")]
         public string BetResult { get; init; } = default!;
         /// <summary>
         /// 牌型 ex:庄:♦3♦3 闲:♥9♣10<br />
@@ -196,7 +172,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 庄:♣3♦Q闲:♣A♥9♠8
         /// </value>
-        [JsonPropertyName("gameResult")]
         public string GameResult { get; init; } = default!;
         /// <summary>
         /// 游戏名称 ex:百家乐
@@ -204,7 +179,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// 百家乐
         /// </value>
-        [JsonPropertyName("gname")]
         public string Gname { get; init; } = default!;
     }
 }

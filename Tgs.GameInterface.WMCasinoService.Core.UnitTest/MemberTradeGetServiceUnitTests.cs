@@ -41,22 +41,22 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                     new GetMemberTradeReportResult
                     {
                         OrderId = "2147647425",
-                        AddTime = "2022-06-13 09:53:57",
+                        AddTime = DateTimeOffset.Parse("2022-06-13 09:53:57"),
                         Mid = "803799",
-                        Money = "100.0000",
+                        Money = decimal.Parse("100.0000"),
                         OpCode = "121",
-                        SubTotal = "100.0000",
+                        SubTotal = decimal.Parse("100.0000"),
                         OrderNum = "",
                         User = "4ucmqplxb029"
                     },
                     new GetMemberTradeReportResult
                     {
                         OrderId = "2147647426",
-                        AddTime = "2022-06-13 09:55:10",
+                        AddTime = DateTimeOffset.Parse("2022-06-13 09:55:10"),
                         Mid = "803799",
-                        Money = "-10.0000",
+                        Money = decimal.Parse("-10.0000"),
                         OpCode = "502",
-                        SubTotal = "90.0000",
+                        SubTotal = decimal.Parse("90.0000"),
                         OrderNum = "101_113053285_5",
                         User = "4ucmqplxb029"
                     }

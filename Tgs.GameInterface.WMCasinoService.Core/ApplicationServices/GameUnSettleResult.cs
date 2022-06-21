@@ -44,7 +44,7 @@
         /// <summary>
         /// 下注時間
         /// </summary>
-        public string BetTime { get; init; } = default!;
+        public DateTimeOffset BetTime { get; init; }
         /// <summary>
         /// 下注内容 ex:"Banker"
         /// </summary>
@@ -52,7 +52,7 @@
         /// <summary>
         /// 下注金额
         /// </summary>
-        public string Bet { get; init; } = default!;
+        public decimal Bet { get; init; }
         /// <summary>
         /// 桌台编号
         /// </summary>

@@ -35,7 +35,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
 
             var balanceResult = new ChangeBalanceResult
             {
-                Cash = "200",
+                Cash = decimal.Parse("200"),
                 OrderId = "2147648076",
                 YourOrderNum = transactionId
             };

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Tgs.GameInterface.WMCasinoService.Core.Models
+﻿namespace Tgs.GameInterface.WMCasinoService.Core.Models
 {
     public record GetUnsettleReportResult
     {
@@ -10,12 +8,10 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// playerCode
         /// </value>
-        [JsonPropertyName("user")]
         public string User { get; init; } = default!;
         /// <summary>
         /// 注单号
         /// </summary>
-        [JsonPropertyName("betId")]
         public string BetId { get; init; } = default!;
         /// <summary>
         /// 游戏类别编号
@@ -36,57 +32,49 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// <value>
         /// The gid.
         /// </value>
-        [JsonPropertyName("gid")]
         public string Gid { get; init; } = default!;
         /// <summary>
         /// 场次编号
-        /// </summary>        
-        [JsonPropertyName("event")]
+        /// </summary>
         public string Event { get; init; } = default!;
         /// <summary>
         /// 子场次编号
         /// </summary>
-        [JsonPropertyName("eventChild")]
         public string EventChild { get; init; } = default!;
         /// <summary>
         /// 下注時間
         /// </summary>
-        [JsonPropertyName("betTime")]
-        public string BetTime { get; init; } = default!;
+        public DateTimeOffset BetTime { get; init; }
         /// <summary>
         /// 下注内容 ex:"Banker"
         /// </summary>
-        [JsonPropertyName("betResult")]
         public string BetResult { get; init; } = default!;
         /// <summary>
         /// 下注金额
         /// </summary>
-        [JsonPropertyName("bet")]
-        public string Bet { get; init; } = default!;
+        /// <value>
+        /// 10.0000
+        /// </value>
+        public decimal Bet { get; init; }
         /// <summary>
         /// 桌台编号
         /// </summary>
-        [JsonPropertyName("tableId")]
         public string TableId { get; init; } = default!;
         /// <summary>
         /// 0:一般, 1:免佣
         /// </summary>
-        [JsonPropertyName("commission")]
         public string Commission { get; init; } = default!;
         /// <summary>
         /// 场次编号
         /// </summary>
-        [JsonPropertyName("round")]
         public string Round { get; init; } = default!;
         /// <summary>
         /// 子场次编号
         /// </summary>
-        [JsonPropertyName("subround")]
         public string Subround { get; init; } = default!;
         /// <summary>
         /// 游戏名称ex:百家乐
         /// </summary>
-        [JsonPropertyName("gname")]
         public string Gname { get; init; } = default!;
     }
 }

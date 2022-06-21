@@ -15,7 +15,7 @@
         /// <value>
         /// 2022-06-13 09:53:57
         /// </value>
-        public string AddTime { get; init; } = default!;
+        public DateTimeOffset AddTime { get; init; }
         /// <summary>
         ///
         /// </summary>
@@ -29,7 +29,7 @@
         /// <value>
         /// 100.0000
         /// </value>
-        public string Money { get; init; } = default!;
+        public decimal Money { get; init; }
         /// <summary>
         /// 加扣点代码:加点(121)扣点(122)
         /// </summary>
@@ -43,7 +43,7 @@
         /// <value>
         /// 100.0000
         /// </value>
-        public string SubTotal { get; init; } = default!;
+        public decimal SubTotal { get; init; }
         /// <summary>
         /// 该次交易 PG自订单号
         /// </summary>

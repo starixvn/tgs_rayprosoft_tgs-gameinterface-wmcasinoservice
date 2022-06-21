@@ -19,7 +19,7 @@ service GameInterfaceWMCasinoService {
 	rpc KickAllPlayer (GameInterfaceWMCasinoServiceKickAllPlayersRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc GameUrl (GameInterfaceWMCasinoServiceGameUrlRequest) returns (GameInterfaceWMCasinoServiceGameUrlReply);
 	rpc GamePullRecord (GameInterfaceWMCasinoServiceGamePullRecordeRequest) returns (GameInterfaceWMCasinoServiceGamePullRecordReply);
-	rpc GameUnsettle (GameInterfaceWMCasinoServiceGameUnsettleRequest) returns (GameInterfaceWMCasinoServiceGameUnsettleRecordReply);	
+	rpc GameUnsettle (GameInterfaceWMCasinoServiceGameUnsettleRequest) returns (GameInterfaceWMCasinoServiceGameUnsettleRecordReply);		
 }
 
 message GameInterfaceWMCasinoServiceCreatePlayerRequest {
@@ -150,15 +150,15 @@ message GameInterfaceWMCasinoServiceGamePullRecordReply {
 message GameInterfaceWMCasinoServiceGamePullRecord {
 	string user = 1;
 	string bet_id = 2;
-	string bet_time = 3;
-	string before_cash = 4;
-	string bet = 5;
-	string validbet = 6;
-	string water = 7;
-	string result = 8;
+	google.protobuf.Timestamp bet_time = 3;
+	phoenix.protobuf.DecimalValue before_cash = 4;
+	phoenix.protobuf.DecimalValue bet = 5;
+	phoenix.protobuf.DecimalValue validbet = 6;
+	phoenix.protobuf.DecimalValue water = 7;
+	phoenix.protobuf.DecimalValue result = 8;
 	string bet_code = 9;
-	string waterbet = 10;
-	string winloss = 11;
+	phoenix.protobuf.DecimalValue waterbet = 10;
+	phoenix.protobuf.DecimalValue winloss = 11;
 	string ip = 12;
 	string gid = 13;
 	string event = 14;
@@ -167,7 +167,7 @@ message GameInterfaceWMCasinoServiceGamePullRecord {
 	string subround = 17;
 	string table_id = 18;
 	string commission = 19;
-	string settime = 20;
+	google.protobuf.Timestamp settime = 20;
 	string reset = 21;
 	string bet_result = 22;
 	string game_result = 23;

@@ -194,8 +194,8 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
 
         [HttpPost("game/pullrecord")]
         public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
-                    [FromServices] IQueryService<GamePullRecordQuery, GamePullRecordResult> service,
-                    GamePullRecordQueryViewModel model)
+            [FromServices] IQueryService<GamePullRecordQuery, GamePullRecordResult> service,
+            GamePullRecordQueryViewModel model)
         {
             var result = await service
                 .QueryAsync(new GamePullRecordQuery(
@@ -317,8 +317,8 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         /// </remarks>
         [HttpPost("transaction")]
         public async IAsyncEnumerable<MemberTradeViewModel> GetMemberTradeReport(
-                    [FromServices] IQueryService<MemberTradeQuery, MemberTradeResult> service,
-                    MemberTradeQueryViewModel model)
+            [FromServices] IQueryService<MemberTradeQuery, MemberTradeResult> service,
+            MemberTradeQueryViewModel model)
         {
             var result = await service
                 .QueryAsync(new MemberTradeQuery(

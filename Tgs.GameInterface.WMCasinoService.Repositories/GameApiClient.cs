@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
@@ -46,11 +45,21 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             if (errorCode == 0)
             {
+                if (!document.RootElement.TryGetProperty("result", out var jsonResult))
+                {
+                    throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})");
+                }
+
                 return new ChangeBalanceResponse
                 {
                     ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<ChangeBalanceResult>(document.RootElement.GetProperty("result").GetRawText())!
+                    Result = new ChangeBalanceResult
+                    {
+                        OrderId = jsonResult.GetProperty("orderId").ToString(),
+                        YourOrderNum = jsonResult.GetProperty("yourOrderNum").ToString(),
+                        Cash = decimal.Parse(jsonResult.GetProperty("cash").ToString())
+                    }
                 };
             }
             else
@@ -146,11 +155,46 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             if (errorCode == 0)
             {
+                if (!document.RootElement.TryGetProperty("result", out var jsonResult))
+                {
+                    throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})");
+                }
+
                 return new GetDateTimeReportResponse
                 {
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<GetDateTimeReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
+                    Result = jsonResult.EnumerateArray().Select(result => new GetDateTimeReportResult
+                    {
+                        User = result.GetProperty("user").ToString(),
+                        BetId = result.GetProperty("betId").ToString(),
+                        BetTime = new DateTimeOffset(
+                            DateTime.Parse(result.GetProperty("betTime").ToString()),
+                            TimeSpan.FromHours(8)),
+                        BeforeCash = decimal.Parse(result.GetProperty("beforeCash").ToString()),
+                        Bet = decimal.Parse(result.GetProperty("bet").ToString()),
+                        Validbet = decimal.Parse(result.GetProperty("validbet").ToString()),
+                        Water = decimal.Parse(result.GetProperty("water").ToString()),
+                        Result = decimal.Parse(result.GetProperty("result").ToString()),
+                        BetCode = result.GetProperty("betCode").ToString(),
+                        Waterbet = decimal.Parse(result.GetProperty("waterbet").ToString()),
+                        WinLoss = decimal.Parse(result.GetProperty("winLoss").ToString()),
+                        Ip = result.GetProperty("ip").ToString(),
+                        Gid = result.GetProperty("gid").ToString(),
+                        Event = result.GetProperty("event").ToString(),
+                        EventChild = result.GetProperty("eventChild").ToString(),
+                        Round = result.GetProperty("round").ToString(),
+                        SubRound = result.GetProperty("subround").ToString(),
+                        TableId = result.GetProperty("tableId").ToString(),
+                        Commission = result.GetProperty("commission").ToString(),
+                        Settime = new DateTimeOffset(
+                            DateTime.Parse(result.GetProperty("settime").ToString()),
+                            TimeSpan.FromHours(8)),
+                        Reset = result.GetProperty("reset").ToString(),
+                        BetResult = result.GetProperty("betResult").ToString(),
+                        GameResult = result.GetProperty("gameResult").ToString(),
+                        Gname = result.GetProperty("gname").ToString()
+                    }).ToArray()
                 };
             }
             else if (errorCode == 107)
@@ -206,11 +250,26 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             if (errorCode == 0)
             {
+                if (!document.RootElement.TryGetProperty("result", out var jsonResult))
+                {
+                    throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})");
+                }
+
                 return new GetMemberTradeReportResponse
                 {
                     ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<GetMemberTradeReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
+                    Result = jsonResult.EnumerateArray().Select(result => new GetMemberTradeReportResult
+                    {
+                        OrderId = result.GetProperty("orderid").ToString(),
+                        AddTime = DateTimeOffset.Parse(result.GetProperty("addtime").ToString()),
+                        Mid = result.GetProperty("mid").ToString(),
+                        Money = decimal.Parse(result.GetProperty("money").ToString()),
+                        OpCode = result.GetProperty("op_code").ToString(),
+                        SubTotal = decimal.Parse(result.GetProperty("subtotal").ToString()),
+                        OrderNum = result.GetProperty("ordernum").ToString(),
+                        User = result.GetProperty("user").ToString()
+                    }).ToArray()
                 };
             }
             else if (errorCode == 107)
@@ -252,11 +311,33 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             if (errorCode == 0)
             {
+                if (!document.RootElement.TryGetProperty("result", out var jsonResult))
+                {
+                    throw new Exception($"JsonElement parsing failed.({JsonSerializer.Serialize(document)})");
+                }
+
                 return new GetUnsettleReportResponse
                 {
                     ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
                     ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = JsonSerializer.Deserialize<GetUnsettleReportResult[]>(document.RootElement.GetProperty("result").GetRawText())!
+                    Result = jsonResult.EnumerateArray().Select(result => new GetUnsettleReportResult
+                    {
+                        User = result.GetProperty("user").ToString(),
+                        BetId = result.GetProperty("betId").ToString(),
+                        Gid = result.GetProperty("gid").ToString(),
+                        Event = result.GetProperty("event").ToString(),
+                        EventChild = result.GetProperty("eventChild").ToString(),
+                        BetTime = new DateTimeOffset(
+                            DateTime.Parse(result.GetProperty("betTime").ToString()),
+                            TimeSpan.FromHours(8)),
+                        BetResult = result.GetProperty("betResult").ToString(),
+                        Bet = decimal.Parse(result.GetProperty("bet").ToString()),
+                        TableId = result.GetProperty("tableId").ToString(),
+                        Commission = result.GetProperty("commission").ToString(),
+                        Round = result.GetProperty("round").ToString(),
+                        Subround = result.GetProperty("subround").ToString(),
+                        Gname = result.GetProperty("gname").ToString()
+                    }).ToArray()
                 };
             }
             else if (errorCode == 107)
