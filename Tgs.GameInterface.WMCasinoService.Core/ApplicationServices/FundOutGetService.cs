@@ -29,9 +29,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 .ConfigureAwait(false);
 
             return new FundOutResult(
-                TransactionId: result.Result!.YourOrderNum,
-                GameProviderTransactionId: result.Result.OrderId,
-                CurrentBalance: result.Result.Cash);
+                Success: result.Success,
+                Message: result.Message,
+                TransactionId: result.TransactionId,
+                GameProviderTransactionId: result.GameProviderTransactionId,
+                CurrentBalance: result.CurrentBalance);
         }
     }
 }

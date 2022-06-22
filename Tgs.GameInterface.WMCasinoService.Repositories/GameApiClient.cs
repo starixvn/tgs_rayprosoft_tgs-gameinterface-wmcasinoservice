@@ -41,7 +41,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 throw new Exception("Document is empty.");
             }
 
-            var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
+            var errorCode = document.RootElement.GetProperty("errorCode").GetInt32();
 
             if (errorCode == 0)
             {
@@ -52,21 +52,24 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
                 return new ChangeBalanceResponse
                 {
-                    ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
-                    ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = new ChangeBalanceResult
-                    {
-                        OrderId = jsonResult.GetProperty("orderId").ToString(),
-                        YourOrderNum = jsonResult.GetProperty("yourOrderNum").ToString(),
-                        Cash = decimal.Parse(jsonResult.GetProperty("cash").ToString())
-                    }
+                    Success = true,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").ToString(),
+                    TransactionId = jsonResult.GetProperty("yourOrderNum").ToString(),
+                    GameProviderTransactionId = jsonResult.GetProperty("orderId").ToString(),
+                    CurrentBalance = decimal.Parse(jsonResult.GetProperty("cash").ToString())
                 };
             }
             else
             {
-                var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-                _logger.LogError("ChangeBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
-                throw new Exception("Change Balance Failed");
+                var errorMessage = document.RootElement.GetProperty("errorMessage").ToString();
+                _logger.LogError("Change Balance Failed, errorCode:{errorCode}, errorMessage:{errorMessage} ", errorCode, errorMessage);
+                return new ChangeBalanceResponse
+                {
+                    Success = false,
+                    ErrorCode = errorCode,
+                    Message = errorMessage
+                };
             }
         }
 

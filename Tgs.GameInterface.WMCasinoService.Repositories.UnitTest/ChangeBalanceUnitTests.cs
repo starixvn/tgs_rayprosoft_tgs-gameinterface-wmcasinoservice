@@ -61,7 +61,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var playerCode = "4ucmqplxb029";
 
             var response = new
-            {
+            {                                
                 errorCode = (int)GameApiClientError.Success,
                 errorMessage = "操作成功",
                 result = new
@@ -91,7 +91,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             };
             var result = await client.ChangeBalanceAsync(apiUrl, request);
 
-            Assert.AreEqual(response.result.cash, result.Result!.Cash);
+            Assert.AreEqual(response.result.cash, result.CurrentBalance);
         }
     }
 }

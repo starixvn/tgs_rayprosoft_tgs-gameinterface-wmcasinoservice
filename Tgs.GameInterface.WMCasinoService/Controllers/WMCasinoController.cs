@@ -75,8 +75,10 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 .ConfigureAwait(false);
 
             return new FundResultViewModel(
-                result.TransactionId,
+                result.Success,
+                result.Message,
                 result.GameProviderTransactionId,
+                result.TransactionId,
                 result.CurrentBalance);
         }
 
@@ -115,8 +117,10 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 .ConfigureAwait(false);
 
             return new FundResultViewModel(
-                result.TransactionId,
+                result.Success,
+                result.Message,
                 result.GameProviderTransactionId,
+                result.TransactionId,
                 result.CurrentBalance);
         }
 

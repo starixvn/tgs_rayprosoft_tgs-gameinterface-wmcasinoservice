@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Tgs.GameInterface.WMCasinoService.Core.Models
+﻿namespace Tgs.GameInterface.WMCasinoService.Core.Models
 {
     public record ChangeBalanceResponse
     {
@@ -23,15 +21,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.Models
         /// 10808 转帐失败,一分钟内转帐次数超过10次,帐号已锁定<br />
         /// 10810 连线异常，交易未成功
         /// </value>
-        [JsonPropertyName("errorCode")]
         public int ErrorCode { get; init; }
-        /// <summary>
-        /// 错误讯息
-        /// </summary>
-        [JsonPropertyName("errorMessage")]
-        public string ErrorMessage { get; init; } = default!;
-
-        [JsonPropertyName("result")]
-        public ChangeBalanceResult? Result { get; init; }
+        public bool Success { get; init; }
+        public string? Message { get; init; }
+        public string? TransactionId { get; init; }
+        public string? GameProviderTransactionId { get; init; }
+        public decimal? CurrentBalance { get; init; }
     }
 }

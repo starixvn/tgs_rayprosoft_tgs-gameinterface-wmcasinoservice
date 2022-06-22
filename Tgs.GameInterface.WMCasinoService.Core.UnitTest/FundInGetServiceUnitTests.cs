@@ -28,20 +28,16 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 TransactionId: transactionId,
                 Amount: amount);
 
-            var fakeClient = Substitute.For<IGameApiClient>();
-
-            var balanceResult = new ChangeBalanceResult
-            {
-                Cash = decimal.Parse("200"),
-                OrderId = "2147648076",
-                YourOrderNum = transactionId
-            };
+            var fakeClient = Substitute.For<IGameApiClient>();            
 
             var result = new ChangeBalanceResponse
             {
                 ErrorCode = 0,
-                ErrorMessage = "操作成功",
-                Result = balanceResult
+                Message = "操作成功",
+                Success = true,
+                TransactionId = transactionId,
+                CurrentBalance = 200m,
+                GameProviderTransactionId = "2147648076"
             };
 
             _ = fakeClient

@@ -1,4 +1,9 @@
 ﻿namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
 {
-    public record FundInResult(string GameProviderTransactionId, string? TransactionId, decimal? CurrentBalance);
+    public record FundInResult(
+        bool Success,
+        string? Message,
+        string? GameProviderTransactionId,
+        string? TransactionId,
+        decimal? CurrentBalance);
 }
