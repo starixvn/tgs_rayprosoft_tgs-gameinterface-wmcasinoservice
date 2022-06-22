@@ -11,6 +11,6 @@
         /// </summary>
         public string Signature { get; init; } = default!;
 
-        public DateTime Time { get; init; }
+        public DateTimeOffset Time { get; init; }
     }
 }

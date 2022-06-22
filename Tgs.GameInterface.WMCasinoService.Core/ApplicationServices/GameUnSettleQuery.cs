@@ -4,5 +4,5 @@
         Uri ApiUrl,
         string VendorId,
         string Signature,
-        DateTime Time);
+        DateTimeOffset Time);
 }
