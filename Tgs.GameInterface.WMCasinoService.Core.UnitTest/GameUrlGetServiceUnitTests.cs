@@ -41,8 +41,8 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var result = new SigninGameResponse
             {
                 ErrorCode = 0,
-                ErrorMessage = "操作成功",
-                Result = gameUrl
+                Message = "操作成功",
+                GameUrl = gameUrl
             };
 
             _ = fakeClient

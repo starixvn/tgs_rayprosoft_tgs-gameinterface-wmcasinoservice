@@ -25,7 +25,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 request,
                 cancellationToken).ConfigureAwait(false);
 
-            return new BalanceResult(result.IsPlayerExist, result.Result);
+            return new BalanceResult(
+                result.Success,
+                result.IsPlayerExist,
+                result.Message,
+                result.Balance);
         }
     }
 }

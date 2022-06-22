@@ -53,8 +53,8 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var result = await client.SigninGameAsync(apiUrl, request);
 
             Assert.AreEqual(response.errorCode, result.ErrorCode);
-            Assert.AreEqual(response.errorMessage, result.ErrorMessage);
-            Assert.AreEqual(response.result, result.Result);
+            Assert.AreEqual(response.errorMessage, result.Message);
+            Assert.AreEqual(response.result, result.GameUrl);
         }
     }
 }

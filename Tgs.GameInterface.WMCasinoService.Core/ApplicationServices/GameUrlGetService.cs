@@ -27,7 +27,11 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 request,
                 cancellationToken).ConfigureAwait(false);
 
-            return new GameUrlResult(result.Result);
+            return new GameUrlResult(
+                result.Success,
+                result.IsPlayerExist,
+                result.Message,
+                result.GameUrl);
         }
     }
 }

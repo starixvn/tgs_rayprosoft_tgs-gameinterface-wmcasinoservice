@@ -158,7 +158,11 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.Language))
                 .ConfigureAwait(false);
 
-            return new GameUrlResultViewModel(result.GameUrl);
+            return new GameUrlResultViewModel(
+                result.Success,
+                result.IsPlayerExist,
+                result.Message,
+                result.GameUrl);
         }
 
         /// <summary>
@@ -192,7 +196,9 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 .ConfigureAwait(false);
 
             return new BalanceResultViewModel(
+                result.Success,
                 result.IsPlayerExist,
+                result.Message,
                 result.Balance);
         }
 

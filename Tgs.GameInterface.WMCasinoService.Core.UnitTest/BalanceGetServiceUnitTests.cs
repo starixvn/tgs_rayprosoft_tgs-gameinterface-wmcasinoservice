@@ -34,9 +34,9 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var result = new GetBalanceResponse
             {
                 ErrorCode = 0,
-                ErrorMessage = "操作成功",
+                Message = "操作成功",
                 IsPlayerExist = true,
-                Result = 168m
+                Balance = 168m
             };
 
             _ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))
@@ -72,9 +72,9 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var result = new GetBalanceResponse
             {
                 ErrorCode = 10501,
-                ErrorMessage = "查无此帐号,请检查",
+                Message = "查无此帐号,请检查",
                 IsPlayerExist = false,
-                Result = null
+                Balance = null
             };
 
             _ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))

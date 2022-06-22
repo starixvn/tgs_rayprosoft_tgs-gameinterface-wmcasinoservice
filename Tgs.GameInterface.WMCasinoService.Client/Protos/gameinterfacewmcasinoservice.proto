@@ -105,8 +105,8 @@ message GameInterfaceWMCasinoServiceReply {
 message GameInterfaceWMCasinoServiceFundReply {
 	bool success = 1;
 	string message = 2;
-	string transaction_id = 3;
-	string game_provider_transaction_id = 4;	
+	string game_provider_transaction_id = 3;	
+	string transaction_id = 4;
 	phoenix.protobuf.DecimalValue current_balance = 5;
 }
 
@@ -116,11 +116,11 @@ message GameInterfaceWMCasinoServiceFundOrderReply {
 
 message GameInterfaceWMCasinoServiceFundOrder {
 	string order_id = 1;
-	string add_time = 2;
+	google.protobuf.Timestamp add_time = 2;
 	string mid = 3;
-	string money = 4;
+	phoenix.protobuf.DecimalValue money = 4;
 	string op_code = 5;
-	string subtotal = 6;
+	phoenix.protobuf.DecimalValue subtotal = 6;
 	string order_num = 7;
 	string user = 8;
 }
@@ -128,8 +128,8 @@ message GameInterfaceWMCasinoServiceFundOrder {
 
 message GameInterfaceWMCasinoServiceBalanceReply {
 	bool success = 1;
-	string message = 2;
-	bool is_player_exist = 3;
+	bool is_player_exist = 2;
+	string message = 3;
 	phoenix.protobuf.DecimalValue balance = 4;
 }
 
@@ -137,8 +137,8 @@ message GameInterfaceWMCasinoServiceBalanceReply {
 
 message GameInterfaceWMCasinoServiceGameUrlReply {
 	bool success = 1;
-	string message = 2;
-	bool is_player_exist = 3;
+	bool is_player_exist = 2;
+	string message = 3;
 	string game_url = 4;
 }
 
@@ -150,15 +150,15 @@ message GameInterfaceWMCasinoServiceGamePullRecordReply {
 message GameInterfaceWMCasinoServiceGamePullRecord {
 	string user = 1;
 	string bet_id = 2;
-	string bet_time = 3;
-	string before_cash = 4;
-	string bet = 5;
-	string validbet = 6;
-	string water = 7;
-	string result = 8;
+	google.protobuf.Timestamp bet_time = 3;
+	phoenix.protobuf.DecimalValue before_cash = 4;
+	phoenix.protobuf.DecimalValue bet = 5;
+	phoenix.protobuf.DecimalValue validbet = 6;
+	phoenix.protobuf.DecimalValue water = 7;
+	phoenix.protobuf.DecimalValue result = 8;
 	string bet_code = 9;
-	string waterbet = 10;
-	string winloss = 11;
+	phoenix.protobuf.DecimalValue waterbet = 10;
+	phoenix.protobuf.DecimalValue winloss = 11;
 	string ip = 12;
 	string gid = 13;
 	string event = 14;
@@ -167,7 +167,7 @@ message GameInterfaceWMCasinoServiceGamePullRecord {
 	string subround = 17;
 	string table_id = 18;
 	string commission = 19;
-	string settime = 20;
+	google.protobuf.Timestamp settime = 20;
 	string reset = 21;
 	string bet_result = 22;
 	string game_result = 23;
@@ -184,7 +184,7 @@ message GameInterfaceWMCasinoServiceGameUnsettleRecord {
 	string gid = 3;
 	string event = 4;
 	string event_child = 5;
-	string bet_time = 6;
+	google.protobuf.Timestamp bet_time = 6;
 	string bet_result = 7;
 	string bet = 8;
 	string table_id = 9;

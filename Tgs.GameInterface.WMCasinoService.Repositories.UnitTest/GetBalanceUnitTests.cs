@@ -51,7 +51,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var result = await client.GetBalanceAsync(apiUrl, request);
 
             Assert.IsFalse(result.IsPlayerExist);
-            Assert.AreEqual(response.result, result.Result);
+            Assert.AreEqual(response.result, result.Balance);
         }
 
         [TestMethod]
@@ -89,7 +89,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var result = await client.GetBalanceAsync(apiUrl, request);
 
             Assert.IsTrue(result.IsPlayerExist);
-            Assert.AreEqual(response.result, result.Result);
+            Assert.AreEqual(response.result, result.Balance);
         }
     }
 }

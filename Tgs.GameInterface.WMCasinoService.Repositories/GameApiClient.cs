@@ -97,9 +97,10 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new GetBalanceResponse
                 {
+                    Success = true,
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
-                    ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = document.RootElement.GetProperty("result").GetDecimal(),
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    Balance = document.RootElement.GetProperty("result").GetDecimal(),
                     IsPlayerExist = true
                 };
             }
@@ -107,9 +108,10 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new GetBalanceResponse
                 {
+                    Success = false,
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
-                    ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = null,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    Balance = null,
                     IsPlayerExist = false
                 };
             }
@@ -479,16 +481,33 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new SigninGameResponse
                 {
-                    ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
-                    ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                    Result = document.RootElement.GetProperty("result").GetString()!
+                    Success = true,
+                    IsPlayerExist = true,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    GameUrl = document.RootElement.GetProperty("result").GetString()!
+                };
+            }
+            else if (errorCode == 10501)
+            {
+                return new SigninGameResponse
+                {
+                    Success = false,
+                    IsPlayerExist = false,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    GameUrl = null
                 };
             }
             else
             {
-                var errorMessage = document.RootElement.GetProperty("errorMessage").GetString()!;
-                _logger.LogError("SigninGame Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
-                throw new Exception("Signin Game Failed");
+                return new SigninGameResponse
+                {
+                    Success = false,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    GameUrl = null
+                };
             }
         }
 
