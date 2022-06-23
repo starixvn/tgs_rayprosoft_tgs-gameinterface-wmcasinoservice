@@ -125,20 +125,23 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
         public async ValueTask<GetDateTimeReportResponse> GetDateTimeReportAsync(Uri apiUrl, GetDateTimeReportRequest request, CancellationToken cancellationToken = default)
         {
+            var cuiabaTime = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");//(UTC+08:00) Taipei
+
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(request.StartTime.UtcDateTime, cuiabaTime);
+            var endTime = TimeZoneInfo.ConvertTimeFromUtc(request.EndTime.UtcDateTime, cuiabaTime);
+
             var parameters = new Dictionary<string, string>
             {
                 ["cmd"] = "GetDateTimeReport",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["startTime"] = request.StartTime.ToString("yyyyMMddHHmmss"),
+                ["startTime"] = startTime.ToString("yyyyMMddHHmmss"),
+                ["endTime"] = endTime.ToString("yyyyMMddHHmmss"),
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
             if (request.User != null)
                 parameters.Add("user", request.User);
-
-            if (request.EndTime != null)
-                parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
             if (request.TimeType != null)
                 parameters.Add("timetype", request.TimeType.Value.ToString());

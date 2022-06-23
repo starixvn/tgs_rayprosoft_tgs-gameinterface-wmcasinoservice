@@ -141,8 +141,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 request.VendorId,
                 request.Signature,
                 request.StartTime.ToDateTimeOffset(),
-                request.EndTime.ToDateTimeOffset(),
-                request.PlayerCode
+                request.EndTime.ToDateTimeOffset()
             )).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameInterfaceWMCasinoServiceGamePullRecordReply();

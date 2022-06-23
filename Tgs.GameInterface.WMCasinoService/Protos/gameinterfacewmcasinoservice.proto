@@ -85,8 +85,7 @@ message GameInterfaceWMCasinoServiceGamePullRecordeRequest {
 	string vendor_id = 2;
 	string signature = 3;
 	google.protobuf.Timestamp start_time = 4; 
-    google.protobuf.Timestamp end_time = 5; 
-	string player_code = 6;
+    google.protobuf.Timestamp end_time = 5;
 }
 
 message GameInterfaceWMCasinoServiceGameUnsettleRequest {

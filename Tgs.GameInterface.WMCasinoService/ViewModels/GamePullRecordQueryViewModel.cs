@@ -4,7 +4,6 @@
         Uri ApiUrl,
         string VendorId,
         string Signature,
-        DateTime StartTime,
-        DateTime? EndTime,
-        string? PlayerCode);
+        DateTimeOffset StartTime,
+        DateTimeOffset EndTime);
 }

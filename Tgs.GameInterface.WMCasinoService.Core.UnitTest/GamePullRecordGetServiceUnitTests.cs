@@ -21,22 +21,22 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var startTime = new DateTime(2022, 6, 17);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
             var query = new GamePullRecordQuery(
                 ApiUrl: apiUrl,
                 VendorId: vendorId,
                 Signature: sign,
                 StartTime: startTime,
-                EndTime: null,
-                PlayerCode: null);
+                EndTime: endTime);
 
             var request = new GetDateTimeReportRequest
             {
                 VendorId = vendorId,
                 Signature = sign,
                 StartTime = startTime,
-                EndTime = null,
+                EndTime = endTime,
                 User = null,
                 DataType = null,
                 TimeType = null,

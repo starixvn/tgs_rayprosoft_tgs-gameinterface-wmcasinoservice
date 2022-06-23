@@ -5,6 +5,5 @@
         string VendorId,
         string Signature,
         DateTimeOffset StartTime,
-        DateTimeOffset? EndTime,
-        string? PlayerCode);
+        DateTimeOffset EndTime);
 }
