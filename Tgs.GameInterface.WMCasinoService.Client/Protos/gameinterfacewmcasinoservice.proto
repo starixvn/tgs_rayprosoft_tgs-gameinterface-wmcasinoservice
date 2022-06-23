@@ -186,7 +186,7 @@ message GameInterfaceWMCasinoServiceGameUnsettleRecord {
 	string event_child = 5;
 	google.protobuf.Timestamp bet_time = 6;
 	string bet_result = 7;
-	string bet = 8;
+	phoenix.protobuf.DecimalValue bet = 8;
 	string table_id = 9;
 	string commission = 10;
 	string round = 11;
