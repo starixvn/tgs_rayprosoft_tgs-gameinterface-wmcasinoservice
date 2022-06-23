@@ -202,6 +202,24 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 result.Balance);
         }
 
+        /// <summary>
+        /// Gets the game pull record asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
+        ///             "vendorId": "hpg02twapi",
+        ///             "signature": "89448b444ed2e922ddc3aa0753370238",
+        ///             "startTime": "2022-06-15T00:00:00.000Z",
+        ///             "endTime": "2022-06-16T00:00:00.000Z"
+        ///         }
+        /// </remarks>
         [HttpPost("game/pullrecord")]
         public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
             [FromServices] IQueryService<GamePullRecordQuery, GamePullRecordResult> service,
