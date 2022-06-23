@@ -42,14 +42,16 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var fakeLog = NullLogger<GameApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
             var request = new GetDateTimeReportRequest
             {
                 VendorId = vendorId,
                 Signature = sign,
                 User = playerCode,
-                StartTime = DateTime.Now.AddDays(-1),
-                EndTime = null,
+                StartTime = startTime,
+                EndTime = endTime,
                 DataType = null,
                 TimeType = null,
                 GameNo1 = null
@@ -112,14 +114,16 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var fakeLog = NullLogger<GameApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
             var request = new GetDateTimeReportRequest
             {
                 VendorId = vendorId,
                 Signature = sign,
                 User = playerCode,
-                StartTime = DateTime.Now,
-                EndTime = null,
+                StartTime = startTime,
+                EndTime = endTime,
                 DataType = null,
                 TimeType = null,
                 GameNo1 = null

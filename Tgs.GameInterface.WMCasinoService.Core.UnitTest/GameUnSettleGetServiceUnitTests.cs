@@ -62,7 +62,6 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
 
             var actual = await sut.QueryAsync(query).ToArrayAsync();
 
-            
             _ = await fakeClient
                 .Received(1)
                 .GetUnsettleReportAsync(Arg.Is(apiUrl), Arg.Is(request));

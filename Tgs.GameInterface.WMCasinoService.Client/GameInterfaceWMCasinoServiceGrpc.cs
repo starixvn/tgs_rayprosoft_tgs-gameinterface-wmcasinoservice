@@ -59,8 +59,7 @@ namespace Tgs.GameInterface.WMCasinoService.Client
             VendorId = vendorId,
             Signature = signature,
             StartTime = startTime.ToTimestamp(),
-            EndTime = endTime?.ToTimestamp(),
-            PlayerCode = playerCode,
+            EndTime = endTime?.ToTimestamp()
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         public async ValueTask<GameInterfaceWMCasinoServiceGameUnsettleRecordReply> GameUnsettleAsync(Uri apiUrl, string vendorId, string signature, DateTime time, CancellationToken cancellationToken = default)

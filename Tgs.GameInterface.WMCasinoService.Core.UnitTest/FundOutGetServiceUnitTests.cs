@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -31,14 +28,14 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 TransactionId: transactionId,
                 Amount: amount);
 
-            var fakeClient = Substitute.For<IGameApiClient>();           
+            var fakeClient = Substitute.For<IGameApiClient>();
 
             var result = new ChangeBalanceResponse
             {
                 ErrorCode = 0,
                 Message = "操作成功",
                 CurrentBalance = 200m,
-                TransactionId = transactionId, 
+                TransactionId = transactionId,
                 Success = true,
                 GameProviderTransactionId = "2147648076"
             };

@@ -61,7 +61,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var playerCode = "4ucmqplxb029";
 
             var response = new
-            {                                
+            {
                 errorCode = (int)GameApiClientError.Success,
                 errorMessage = "操作成功",
                 result = new

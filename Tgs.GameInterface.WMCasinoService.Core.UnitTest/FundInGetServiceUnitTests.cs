@@ -28,7 +28,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 TransactionId: transactionId,
                 Amount: amount);
 
-            var fakeClient = Substitute.For<IGameApiClient>();            
+            var fakeClient = Substitute.For<IGameApiClient>();
 
             var result = new ChangeBalanceResponse
             {
