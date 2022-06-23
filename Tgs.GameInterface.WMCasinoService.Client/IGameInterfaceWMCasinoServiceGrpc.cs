@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.WMCasinoService.Client
 
         ValueTask<GameInterfaceWMCasinoServiceFundReply> FundOutAsync(Uri apiUrl, string vendorId, string signature, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default);
 
-        ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, string? playerCode, CancellationToken cancellationToken = default);
+        ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, CancellationToken cancellationToken = default);
 
         ValueTask<GameInterfaceWMCasinoServiceGameUnsettleRecordReply> GameUnsettleAsync(Uri apiUrl, string vendorId, string signature, DateTime time, CancellationToken cancellationToken = default);
 

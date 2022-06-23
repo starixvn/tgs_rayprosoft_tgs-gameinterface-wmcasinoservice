@@ -52,7 +52,7 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                 Amount = amount
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, string? playerCode, CancellationToken cancellationToken = default)
+        public async ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, CancellationToken cancellationToken = default)
         => await _client.GamePullRecordAsync(new GameInterfaceWMCasinoServiceGamePullRecordeRequest
         {
             ApiUrl = apiUrl.ToString(),
