@@ -28,7 +28,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 Signature: sign,
                 StartTime: null,
                 EndTime: null,
-                PlayerCode: null,
+                User: null,
                 TransactionId: null,
                 GameProviderTransactionId: null);
 

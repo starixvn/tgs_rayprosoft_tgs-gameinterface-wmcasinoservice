@@ -16,15 +16,15 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
-            var userName = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
+            var userName = "wmtf_4ucmqplxb029_GPI";
             var password = "password";
 
             var query = new CreatePlayerCommand(
                 ApiUrl: apiUrl,
                 VendorId: vendorId,
                 Signature: sign,
-                PlayerCode: playerCode,
+                User: user,
                 Password: password,
                 Username: userName);
 
@@ -34,7 +34,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode,
+                User = user,
                 Username = userName,
                 Password = password
             };

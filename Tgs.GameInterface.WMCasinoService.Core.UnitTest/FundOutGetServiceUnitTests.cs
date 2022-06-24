@@ -16,7 +16,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
             string transactionId = Guid.NewGuid().ToString("N");
             decimal amount = 100m;
 
@@ -24,7 +24,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 ApiUrl: apiUrl,
                 VendorId: vendorId,
                 Signature: sign,
-                PlayerCode: playerCode,
+                User: user,
                 TransactionId: transactionId,
                 Amount: amount);
 

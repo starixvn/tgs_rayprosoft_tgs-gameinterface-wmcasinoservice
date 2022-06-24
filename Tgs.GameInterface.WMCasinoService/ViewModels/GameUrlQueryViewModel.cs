@@ -5,7 +5,13 @@
         public Uri ApiUrl { get; init; } = default!;
         public string VendorId { get; init; } = default!;
         public string Signature { get; init; } = default!;
-        public string PlayerCode { get; init; } = default!;
+        /// <summary>
+        /// wmtf_{playerCode}_{brandCode}
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
+        public string User { get; init; } = default!;
         public string Password { get; init; } = default!;
         /// <summary>
         /// 使用语言
