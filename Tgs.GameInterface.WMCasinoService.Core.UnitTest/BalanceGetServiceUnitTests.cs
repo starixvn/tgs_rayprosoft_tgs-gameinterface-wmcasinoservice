@@ -20,15 +20,15 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vedorId = "testVendorId";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb028";
+            var user = "4ucmqplxb028";
 
-            var query = new BalanceQuery(apiUrl, vedorId, sign, playerCode);
+            var query = new BalanceQuery(apiUrl, vedorId, sign, user);
 
             var request = new GetBalanceRequest
             {
                 VendorId = vedorId,
                 Signature = sign,
-                User = playerCode
+                User = user
             };
 
             var result = new GetBalanceResponse
@@ -58,15 +58,15 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vedorId = "testVendorId";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
 
-            var query = new BalanceQuery(apiUrl, vedorId, sign, playerCode);
+            var query = new BalanceQuery(apiUrl, vedorId, sign, user);
 
             var request = new GetBalanceRequest
             {
                 VendorId = vedorId,
                 Signature = sign,
-                User = playerCode
+                User = user
             };
 
             var result = new GetBalanceResponse

@@ -22,7 +22,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb028";
+            var user = "4ucmqplxb028";
 
             var response = new
             {
@@ -46,7 +46,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode
+                User = user
             };
             var result = await client.GetBalanceAsync(apiUrl, request);
 
@@ -60,7 +60,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "4ucmqplxb029";
 
             var response = new
             {
@@ -84,7 +84,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode
+                User = user
             };
             var result = await client.GetBalanceAsync(apiUrl, request);
 

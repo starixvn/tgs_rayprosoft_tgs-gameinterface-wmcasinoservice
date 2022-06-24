@@ -4,7 +4,7 @@
         Uri ApiUrl,
         string VendorId,
         string Signature,
-        string PlayerCode,
+        string User,
         string Password,
         string UserName);
 }

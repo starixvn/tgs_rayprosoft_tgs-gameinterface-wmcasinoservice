@@ -46,7 +46,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                        new(request.ApiUrl),
                        request.VendorId,
                        request.Signature,
-                       request.PlayerCode,
+                       request.User,
                        request.Password,
                        request.UserName)).ConfigureAwait(false);
 
@@ -62,7 +62,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.Amount)).ConfigureAwait(false);
 
@@ -84,7 +84,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 request.Signature,
                 request.StartTime.ToDateTimeOffset(),
                 request.EndTime.ToDateTimeOffset(),
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.GameProviderTransactionId
             )).ToArrayAsync().ConfigureAwait(false);
@@ -120,7 +120,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.Amount)).ConfigureAwait(false);
 
@@ -223,7 +223,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
                 Signature: request.Signature,
-                PlayerCode: request.PlayerCode,
+                User: request.User,
                 Password: request.Password,
                 Language: request.Language
                 )).ConfigureAwait(false);
@@ -243,7 +243,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode)).ConfigureAwait(false);
+                request.User)).ConfigureAwait(false);
 
             return new GameInterfaceWMCasinoServiceBalanceReply()
             {
@@ -260,7 +260,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode)).ConfigureAwait(false);
+                request.User)).ConfigureAwait(false);
 
             return new GameInterfaceWMCasinoServiceReply()
             {

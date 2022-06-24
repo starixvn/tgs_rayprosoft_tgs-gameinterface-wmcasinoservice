@@ -52,7 +52,7 @@
         /// 该次交易的帐号
         /// </summary>
         /// <value>
-        /// playerCode
+        /// wmtf_{playerCode}_{brandCode}
         /// </value>
         public string User { get; init; } = default!;
     }
