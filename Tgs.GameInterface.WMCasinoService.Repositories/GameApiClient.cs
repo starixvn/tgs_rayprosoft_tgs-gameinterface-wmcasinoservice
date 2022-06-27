@@ -108,7 +108,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new GetBalanceResponse
                 {
-                    Success = false,
+                    Success = true,
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                     Message = document.RootElement.GetProperty("errorMessage").GetString()!,
                     Balance = null,
@@ -495,7 +495,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new SigninGameResponse
                 {
-                    Success = false,
+                    Success = true,
                     IsPlayerExist = false,
                     ErrorCode = errorCode,
                     Message = document.RootElement.GetProperty("errorMessage").GetString()!,
