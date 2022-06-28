@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.Logging;
@@ -152,7 +153,33 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             if (request.GameNo1 != null)
                 parameters.Add("gameno1", request.GameNo1.Value.ToString());
 
-            var document = await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken);
+            var retryCount = 3;
+            var retryMaxSeconds = 0;
+            var retryPolicy = 
+                Policy
+                    .HandleResult<JsonDocument>(r => 
+                        {
+                            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+                            if (errorCode == 10411)
+                                retryMaxSeconds = 30;
+                            else if (errorCode == 10418)
+                                retryMaxSeconds = 10;
+                            return errorCode is 10411 or 10418;
+                        })
+                    .WaitAndRetryAsync(
+                        retryCount,
+                        retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: retryMaxSeconds)),
+                        (result, retryTime, context) =>
+                        {
+                            _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                                DateTime.Now.ToString("o"),
+                                parameters,
+                                result,
+                                retryTime);
+                        });
+            
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken));
+
 
             if (document is null)
             {
@@ -308,7 +335,32 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken);
+            var retryCount = 3;
+            var retryMaxSeconds = 0;
+            var retryPolicy =
+                Policy
+                    .HandleResult<JsonDocument>(r =>
+                    {
+                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+                        if (errorCode == 10411)
+                            retryMaxSeconds = 30;
+                        else if (errorCode == 10418)
+                            retryMaxSeconds = 10;
+                        return errorCode is 10411 or 10418;
+                    })
+                    .WaitAndRetryAsync(
+                        retryCount,
+                        retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: retryMaxSeconds)),
+                        (result, retryTime, context) =>
+                        {
+                            _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                                DateTime.Now.ToString("o"),
+                                parameters,
+                                result,
+                                retryTime);
+                        });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken));            
 
             if (document is null)
             {
