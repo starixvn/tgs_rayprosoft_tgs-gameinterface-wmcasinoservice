@@ -74,6 +74,43 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             }
         }
 
+        public async ValueTask<GetAgentBalanceResponse> GetAgentBalanceAsync(Uri apiUrl, GetAgentBalanceRequest request, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cmd"] = "GetAgentBalance",
+                ["vendorId"] = request.VendorId,
+                ["signature"] = request.Signature,
+                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+            };
+
+            var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
+
+            if (errorCode == 0)
+            {
+                return new GetAgentBalanceResponse
+                {
+                    Success = true,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    Balance = document.RootElement.GetProperty("result").GetDecimal()
+                };
+            }
+            else
+            {
+                var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
+                _logger.LogError("GetBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+                throw new Exception("Get Balance Failed");
+            }
+        }
+
         public async ValueTask<GetBalanceResponse> GetBalanceAsync(Uri apiUrl, GetBalanceRequest request, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
@@ -155,9 +192,9 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             var retryCount = 3;
             var retryMaxSeconds = 0;
-            var retryPolicy = 
+            var retryPolicy =
                 Policy
-                    .HandleResult<JsonDocument>(r => 
+                    .HandleResult<JsonDocument>(r =>
                         {
                             var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
                             if (errorCode == 10411)
@@ -177,9 +214,8 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                                 result,
                                 retryTime);
                         });
-            
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken));
 
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken));
 
             if (document is null)
             {
@@ -360,7 +396,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                                 retryTime);
                         });
 
-            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken));            
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken));
 
             if (document is null)
             {

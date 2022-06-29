@@ -90,14 +90,22 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                 Language = language
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string vendorId, string signature, string user, CancellationToken cancellationToken = default)
-            => await _client.GetBalanceAsync(new GameInterfaceWMCasinoServiceBalanceRequest
+        public async ValueTask<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalanceAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default)
+            => await _client.GetAgentBalanceAsync(new GameInterfaceWMCasinoServiceAgentBalanceRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
-                Signature = signature,
-                User = user
+                Signature = signature
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        public async ValueTask<GameInterfaceWMCasinoServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string vendorId, string signature, string user, CancellationToken cancellationToken = default)
+                    => await _client.GetBalanceAsync(new GameInterfaceWMCasinoServiceBalanceRequest
+                    {
+                        ApiUrl = apiUrl.ToString(),
+                        VendorId = vendorId,
+                        Signature = signature,
+                        User = user
+                    }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         public async ValueTask KickAllPlayersAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default)
             => await _client.KickAllPlayerAsync(new GameInterfaceWMCasinoServiceKickAllPlayersRequest
