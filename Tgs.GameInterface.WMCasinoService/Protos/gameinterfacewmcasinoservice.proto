@@ -15,6 +15,7 @@ service GameInterfaceWMCasinoService {
 	rpc FundOrder (GameInterfaceWMCasinoServiceFundOrderRequest) returns (GameInterfaceWMCasinoServiceFundOrderReply);
 	rpc FundOut (GameInterfaceWMCasinoServiceFundRequest) returns (GameInterfaceWMCasinoServiceFundReply);
 	rpc GetBalance (GameInterfaceWMCasinoServiceBalanceRequest) returns (GameInterfaceWMCasinoServiceBalanceReply);
+	rpc GetAgentBalance (GameInterfaceWMCasinoServiceAgentBalanceRequest) returns (GameInterfaceWMCasinoServiceAgentBalanceReply);
 	rpc KickPlayer (GameInterfaceWMCasinoServiceKickPlayerRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc KickAllPlayer (GameInterfaceWMCasinoServiceKickAllPlayersRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc GameUrl (GameInterfaceWMCasinoServiceGameUrlRequest) returns (GameInterfaceWMCasinoServiceGameUrlReply);
@@ -56,6 +57,12 @@ message GameInterfaceWMCasinoServiceBalanceRequest {
 	string vendor_id = 2;
 	string signature = 3;
 	string user = 4;
+}
+
+message GameInterfaceWMCasinoServiceAgentBalanceRequest {
+	string api_url = 1;
+	string vendor_id = 2;
+	string signature = 3;	
 }
 
 message GameInterfaceWMCasinoServiceKickPlayerRequest {
@@ -124,7 +131,6 @@ message GameInterfaceWMCasinoServiceFundOrder {
 	string user = 8;
 }
 
-
 message GameInterfaceWMCasinoServiceBalanceReply {
 	bool success = 1;
 	bool is_player_exist = 2;
@@ -132,7 +138,11 @@ message GameInterfaceWMCasinoServiceBalanceReply {
 	phoenix.protobuf.DecimalValue balance = 4;
 }
 
-
+message GameInterfaceWMCasinoServiceAgentBalanceReply {
+	bool success = 1;	
+	string message = 2;
+	phoenix.protobuf.DecimalValue balance = 3;
+}
 
 message GameInterfaceWMCasinoServiceGameUrlReply {
 	bool success = 1;

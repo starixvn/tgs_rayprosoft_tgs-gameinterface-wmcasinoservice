@@ -14,6 +14,15 @@ namespace Tgs.GameInterface.WMCasinoService.Core
         ValueTask<ChangeBalanceResponse> ChangeBalanceAsync(Uri apiUrl, ChangeBalanceRequest request, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 查询代理商余额 (查寻该代理商在利新(WM)平台里还剩多少余额。)
+        /// </summary>
+        /// <param name="apiUrl">The API URL.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        ValueTask<GetAgentBalanceResponse> GetAgentBalanceAsync(Uri apiUrl, GetAgentBalanceRequest request, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// 取餘額 (查詢該會員在利新(WM)平台裡還剩多少餘額。)
         /// </summary>
         /// <param name="apiUrl">The API URL.</param>

@@ -8,6 +8,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
 {
     public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.GameInterfaceWMCasinoServiceBase
     {
+        private readonly IGetService<AgentBalanceQuery, AgentBalanceResult> _agentBalanceService;
         private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
         private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
         private readonly IGetService<FundInQuery, FundInResult> _fundInService;
@@ -23,6 +24,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
             IQueryService<MemberTradeQuery, MemberTradeResult> memberTradeService,
             IGetService<FundOutQuery, FundOutResult> fundOutService,
             IGetService<BalanceQuery, BalanceResult> balanceService,
+            IGetService<AgentBalanceQuery, AgentBalanceResult> agentBalanceService,
             ICommandService<LogoutCommand> logoutService,
             ICommandService<CreatePlayerCommand> createPlayerService,
             IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
@@ -33,6 +35,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
             _memberTradeService = memberTradeService ?? throw new ArgumentNullException(nameof(memberTradeService));
             _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
             _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
+            _agentBalanceService = agentBalanceService ?? throw new ArgumentNullException(nameof(agentBalanceService));
             _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
             _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
             _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
@@ -234,6 +237,21 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 Message = result.Message ?? string.Empty,
                 IsPlayerExist = result.IsPlayerExist,
                 GameUrl = result.GameUrl ?? string.Empty,
+            };
+        }
+
+        public override async Task<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalance(GameInterfaceWMCasinoServiceAgentBalanceRequest request, ServerCallContext context)
+        {
+            var result = await _agentBalanceService.GetAsync(new AgentBalanceQuery(
+                new(request.ApiUrl),
+                request.VendorId,
+                request.Signature)).ConfigureAwait(false);
+
+            return new GameInterfaceWMCasinoServiceAgentBalanceReply()
+            {
+                Success = result.Success,
+                Message = result.Message ?? string.Empty,
+                Balance = result.Balance ?? decimal.Zero,
             };
         }
 

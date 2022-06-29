@@ -166,6 +166,40 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         }
 
         /// <summary>
+        /// Gets the agent balance asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
+        ///             "vendorId": "hpg02twapi",
+        ///             "signature": "89448b444ed2e922ddc3aa0753370238"
+        ///         }
+        /// </remarks>
+        [HttpPost("agentBalance")]
+        public async ValueTask<AgentBalanceResultViewModel> GetAgentBalanceAsync(
+            [FromServices] IGetService<AgentBalanceQuery, AgentBalanceResult> service,
+            AgentBalanceQueryViewModel model)
+        {
+            var result = await service
+                .GetAsync(new AgentBalanceQuery(
+                    model.ApiUrl,
+                    model.VendorId,
+                    model.Signature))
+                .ConfigureAwait(false);
+
+            return new AgentBalanceResultViewModel(
+                result.Success,
+                result.Message,
+                result.Balance);
+        }
+
+        /// <summary>
         /// Get the Player balance asynchronous.
         /// </summary>
         /// <param name="service">The service.</param>

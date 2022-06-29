@@ -18,6 +18,8 @@ namespace Tgs.GameInterface.WMCasinoService.Client
 
         ValueTask<GameInterfaceWMCasinoServiceGameUrlReply> GameUrlAsync(Uri apiUrl, string vendorId, string signature, string user, string password, int language, CancellationToken cancellationToken = default);
 
+        ValueTask<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalanceAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default);
+
         ValueTask<GameInterfaceWMCasinoServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string vendorId, string signature, string user, CancellationToken cancellationToken = default);
 
         ValueTask KickAllPlayersAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default);
