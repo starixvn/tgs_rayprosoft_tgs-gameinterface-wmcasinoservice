@@ -106,8 +106,8 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             else
             {
                 var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-                _logger.LogError("GetBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
-                throw new Exception("Get Balance Failed");
+                _logger.LogError("GetAgentBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+                throw new Exception("Get Agent Balance Failed");
             }
         }
 
