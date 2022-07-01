@@ -18,7 +18,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
             {
                 VendorId = command.VendorId,
                 Signature = command.Signature,
-                User = command.PlayerCode
+                User = command.User
             };
 
             _ = await _client.LogoutGameAsync(

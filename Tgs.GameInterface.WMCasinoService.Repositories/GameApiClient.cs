@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.Logging;
@@ -73,6 +74,43 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             }
         }
 
+        public async ValueTask<GetAgentBalanceResponse> GetAgentBalanceAsync(Uri apiUrl, GetAgentBalanceRequest request, CancellationToken cancellationToken = default)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["cmd"] = "GetAgentBalance",
+                ["vendorId"] = request.VendorId,
+                ["signature"] = request.Signature,
+                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+            };
+
+            var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken);
+
+            if (document is null)
+            {
+                throw new Exception("Document is empty.");
+            }
+
+            var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
+
+            if (errorCode == 0)
+            {
+                return new GetAgentBalanceResponse
+                {
+                    Success = true,
+                    ErrorCode = errorCode,
+                    Message = document.RootElement.GetProperty("errorMessage").GetString()!,
+                    Balance = document.RootElement.GetProperty("result").GetDecimal()
+                };
+            }
+            else
+            {
+                var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
+                _logger.LogError("GetAgentBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+                throw new Exception("Get Agent Balance Failed");
+            }
+        }
+
         public async ValueTask<GetBalanceResponse> GetBalanceAsync(Uri apiUrl, GetBalanceRequest request, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, string>
@@ -108,7 +146,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new GetBalanceResponse
                 {
-                    Success = false,
+                    Success = true,
                     ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                     Message = document.RootElement.GetProperty("errorMessage").GetString()!,
                     Balance = null,
@@ -125,20 +163,23 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
         public async ValueTask<GetDateTimeReportResponse> GetDateTimeReportAsync(Uri apiUrl, GetDateTimeReportRequest request, CancellationToken cancellationToken = default)
         {
+            var cuiabaTime = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");//(UTC+08:00) Taipei
+
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(request.StartTime.UtcDateTime, cuiabaTime);
+            var endTime = TimeZoneInfo.ConvertTimeFromUtc(request.EndTime.UtcDateTime, cuiabaTime);
+
             var parameters = new Dictionary<string, string>
             {
                 ["cmd"] = "GetDateTimeReport",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["startTime"] = request.StartTime.ToString("yyyyMMddHHmmss"),
+                ["startTime"] = startTime.ToString("yyyyMMddHHmmss"),
+                ["endTime"] = endTime.ToString("yyyyMMddHHmmss"),
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
             if (request.User != null)
                 parameters.Add("user", request.User);
-
-            if (request.EndTime != null)
-                parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
             if (request.TimeType != null)
                 parameters.Add("timetype", request.TimeType.Value.ToString());
@@ -149,7 +190,32 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             if (request.GameNo1 != null)
                 parameters.Add("gameno1", request.GameNo1.Value.ToString());
 
-            var document = await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken);
+            var retryCount = 3;
+            var retryMaxSeconds = 0;
+            var retryPolicy =
+                Policy
+                    .HandleResult<JsonDocument>(r =>
+                        {
+                            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+                            if (errorCode == 10411)
+                                retryMaxSeconds = 30;
+                            else if (errorCode == 10418)
+                                retryMaxSeconds = 10;
+                            return errorCode is 10411 or 10418;
+                        })
+                    .WaitAndRetryAsync(
+                        retryCount,
+                        retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: retryMaxSeconds)),
+                        (result, retryTime, context) =>
+                        {
+                            _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                                DateTime.Now.ToString("o"),
+                                parameters,
+                                result,
+                                retryTime);
+                        });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken));
 
             if (document is null)
             {
@@ -305,7 +371,32 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken);
+            var retryCount = 3;
+            var retryMaxSeconds = 0;
+            var retryPolicy =
+                Policy
+                    .HandleResult<JsonDocument>(r =>
+                    {
+                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+                        if (errorCode == 10411)
+                            retryMaxSeconds = 30;
+                        else if (errorCode == 10418)
+                            retryMaxSeconds = 10;
+                        return errorCode is 10411 or 10418;
+                    })
+                    .WaitAndRetryAsync(
+                        retryCount,
+                        retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: retryMaxSeconds)),
+                        (result, retryTime, context) =>
+                        {
+                            _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                                DateTime.Now.ToString("o"),
+                                parameters,
+                                result,
+                                retryTime);
+                        });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken));
 
             if (document is null)
             {
@@ -492,7 +583,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 return new SigninGameResponse
                 {
-                    Success = false,
+                    Success = true,
                     IsPlayerExist = false,
                     ErrorCode = errorCode,
                     Message = document.RootElement.GetProperty("errorMessage").GetString()!,

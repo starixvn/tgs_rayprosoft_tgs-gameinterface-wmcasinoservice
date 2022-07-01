@@ -6,7 +6,7 @@
         string Signature,
         DateTime? StartTime,
         DateTime? EndTime,
-        string? PlayerCode,
+        string? User,
         string? TransactionId,
         string? GameProviderTransactionId);
 }

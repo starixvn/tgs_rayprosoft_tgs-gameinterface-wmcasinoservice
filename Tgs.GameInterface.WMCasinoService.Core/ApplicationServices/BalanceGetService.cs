@@ -18,7 +18,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
             {
                 VendorId = query.VendorId,
                 Signature = query.Signature,
-                User = query.PlayerCode
+                User = query.User
             };
             var result = await _client.GetBalanceAsync(
                 query.ApiUrl,

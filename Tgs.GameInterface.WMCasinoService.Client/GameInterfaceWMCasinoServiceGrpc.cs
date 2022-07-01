@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.WMCasinoService.Client
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async ValueTask CreatePlayerAsync(Uri apiUrl, string vendorId, string signature, string playerCode, string password, string userName, CancellationToken cancellationToken = default)
+        public async ValueTask CreatePlayerAsync(Uri apiUrl, string vendorId, string signature, string user, string password, string userName, CancellationToken cancellationToken = default)
         {
             _ = await _client
                 .CreatePlayerAsync(new GameInterfaceWMCasinoServiceCreatePlayerRequest
@@ -20,7 +20,7 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                     ApiUrl = apiUrl.ToString(),
                     VendorId = vendorId,
                     Signature = signature,
-                    PlayerCode = playerCode,
+                    User = user,
                     Password = password,
                     UserName = userName
                 },
@@ -28,39 +28,46 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                 .ConfigureAwait(false);
         }
 
-        public async ValueTask<GameInterfaceWMCasinoServiceFundReply> FundInAsync(Uri apiUrl, string vendorId, string signature, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
+        public async ValueTask<GameInterfaceWMCasinoServiceFundReply> FundInAsync(Uri apiUrl, string vendorId, string signature, string user, string transactionId, decimal amount, CancellationToken cancellationToken = default)
             => await _client.FundInAsync(new GameInterfaceWMCasinoServiceFundRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
                 Signature = signature,
-                PlayerCode = playerCode,
+                User = user,
                 TransactionId = transactionId,
                 Amount = amount
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public ValueTask<GameInterfaceWMCasinoServiceFundOrderReply> FundOrderAsync(Uri apiUrl, string vendorId, string signature, DateTime? startTime, DateTime? endTime, string? playerCode, string? transactionId, string? gameProviderTransactionId, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public async ValueTask<GameInterfaceWMCasinoServiceFundOrderReply> FundOrderAsync(Uri apiUrl, string vendorId, string signature, DateTime? startTime, DateTime? endTime, string? user, string? transactionId, string? gameProviderTransactionId, CancellationToken cancellationToken = default)
+            => await _client.FundOrderAsync(new GameInterfaceWMCasinoServiceFundOrderRequest
+            {
+                ApiUrl = apiUrl.ToString(),
+                VendorId = vendorId,
+                Signature = signature,
+                StartTime = startTime?.ToTimestamp(),
+                EndTime = endTime?.ToTimestamp()
+            }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceFundReply> FundOutAsync(Uri apiUrl, string vendorId, string signature, string playerCode, string transactionId, decimal amount, CancellationToken cancellationToken = default)
+        public async ValueTask<GameInterfaceWMCasinoServiceFundReply> FundOutAsync(Uri apiUrl, string vendorId, string signature, string user, string transactionId, decimal amount, CancellationToken cancellationToken = default)
             => await _client.FundOutAsync(new GameInterfaceWMCasinoServiceFundRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
                 Signature = signature,
-                PlayerCode = playerCode,
+                User = user,
                 TransactionId = transactionId,
                 Amount = amount
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, string? playerCode, CancellationToken cancellationToken = default)
+        public async ValueTask<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecordAsync(Uri apiUrl, string vendorId, string signature, DateTime startTime, DateTime? endTime, CancellationToken cancellationToken = default)
         => await _client.GamePullRecordAsync(new GameInterfaceWMCasinoServiceGamePullRecordeRequest
         {
             ApiUrl = apiUrl.ToString(),
             VendorId = vendorId,
             Signature = signature,
             StartTime = startTime.ToTimestamp(),
-            EndTime = endTime?.ToTimestamp(),
-            PlayerCode = playerCode,
+            EndTime = endTime?.ToTimestamp()
         }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         public async ValueTask<GameInterfaceWMCasinoServiceGameUnsettleRecordReply> GameUnsettleAsync(Uri apiUrl, string vendorId, string signature, DateTime time, CancellationToken cancellationToken = default)
@@ -72,25 +79,33 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                 Time = time.ToTimestamp(),
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceGameUrlReply> GameUrlAsync(Uri apiUrl, string vendorId, string signature, string playerCode, string password, int language, CancellationToken cancellationToken = default)
+        public async ValueTask<GameInterfaceWMCasinoServiceGameUrlReply> GameUrlAsync(Uri apiUrl, string vendorId, string signature, string user, string password, int language, CancellationToken cancellationToken = default)
             => await _client.GameUrlAsync(new GameInterfaceWMCasinoServiceGameUrlRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
                 Signature = signature,
-                PlayerCode = playerCode,
+                User = user,
                 Password = password,
                 Language = language
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<GameInterfaceWMCasinoServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string vendorId, string signature, string playerCode, CancellationToken cancellationToken = default)
-            => await _client.GetBalanceAsync(new GameInterfaceWMCasinoServiceBalanceRequest
+        public async ValueTask<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalanceAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default)
+            => await _client.GetAgentBalanceAsync(new GameInterfaceWMCasinoServiceAgentBalanceRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
-                Signature = signature,
-                PlayerCode = playerCode
+                Signature = signature
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        public async ValueTask<GameInterfaceWMCasinoServiceBalanceReply> GetBalanceAsync(Uri apiUrl, string vendorId, string signature, string user, CancellationToken cancellationToken = default)
+                    => await _client.GetBalanceAsync(new GameInterfaceWMCasinoServiceBalanceRequest
+                    {
+                        ApiUrl = apiUrl.ToString(),
+                        VendorId = vendorId,
+                        Signature = signature,
+                        User = user
+                    }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         public async ValueTask KickAllPlayersAsync(Uri apiUrl, string vendorId, string signature, CancellationToken cancellationToken = default)
             => await _client.KickAllPlayerAsync(new GameInterfaceWMCasinoServiceKickAllPlayersRequest
@@ -100,13 +115,13 @@ namespace Tgs.GameInterface.WMCasinoService.Client
                 Signature = signature
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask KickPlayerAsync(Uri apiUrl, string vendorId, string signature, string playerCode, CancellationToken cancellationToken = default)
+        public async ValueTask KickPlayerAsync(Uri apiUrl, string vendorId, string signature, string user, CancellationToken cancellationToken = default)
             => await _client.KickPlayerAsync(new GameInterfaceWMCasinoServiceKickPlayerRequest
             {
                 ApiUrl = apiUrl.ToString(),
                 VendorId = vendorId,
                 Signature = signature,
-                PlayerCode = playerCode
+                User = user
             }, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

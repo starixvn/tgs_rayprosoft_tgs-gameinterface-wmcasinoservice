@@ -23,7 +23,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb028";
+            var user = "4ucmqplxb028";
 
             var response = new
             {
@@ -42,14 +42,16 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var fakeLog = NullLogger<GameApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
             var request = new GetDateTimeReportRequest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode,
-                StartTime = DateTime.Now.AddDays(-1),
-                EndTime = null,
+                User = user,
+                StartTime = startTime,
+                EndTime = endTime,
                 DataType = null,
                 TimeType = null,
                 GameNo1 = null
@@ -64,7 +66,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
 
             var response = new
             {
@@ -74,7 +76,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
                 {
                     new
                     {
-                        user = "4ucmqplxb029",
+                        user = "wmtf_4ucmqplxb029_GPI",
                         betId = "179229652",
                         betTime = "2022-06-17 10:30:16",
                         beforeCash = "570.0000",
@@ -112,14 +114,16 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var fakeLog = NullLogger<GameApiClient>.Instance;
             var fakeTgsLog = Substitute.For<ITgsLog>();
             var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
             var request = new GetDateTimeReportRequest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode,
-                StartTime = DateTime.Now,
-                EndTime = null,
+                User = user,
+                StartTime = startTime,
+                EndTime = endTime,
                 DataType = null,
                 TimeType = null,
                 GameNo1 = null

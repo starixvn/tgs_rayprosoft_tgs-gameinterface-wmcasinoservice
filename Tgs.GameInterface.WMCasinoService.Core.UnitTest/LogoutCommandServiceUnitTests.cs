@@ -20,8 +20,8 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
-            var command = new LogoutCommand(apiUrl, vendorId, sign, playerCode);
+            var user = "wmtf_4ucmqplxb029_GPI";
+            var command = new LogoutCommand(apiUrl, vendorId, sign, user);
 
             await sut.ExecuteAsync(command);
 

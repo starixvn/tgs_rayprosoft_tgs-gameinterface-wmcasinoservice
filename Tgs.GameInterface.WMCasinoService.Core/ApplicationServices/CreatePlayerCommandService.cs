@@ -19,8 +19,8 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 VendorId = command.VendorId,
                 Signature = command.Signature,
                 Password = command.Password,
-                User = command.PlayerCode,
-                Username = command.PlayerCode
+                User = command.User,
+                Username = command.User
             };
             _ = await _client
                 .MemberRegisterAsync(command.ApiUrl, request, cancellationToken)

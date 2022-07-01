@@ -8,6 +8,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
 {
     public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.GameInterfaceWMCasinoServiceBase
     {
+        private readonly IGetService<AgentBalanceQuery, AgentBalanceResult> _agentBalanceService;
         private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
         private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
         private readonly IGetService<FundInQuery, FundInResult> _fundInService;
@@ -23,6 +24,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
             IQueryService<MemberTradeQuery, MemberTradeResult> memberTradeService,
             IGetService<FundOutQuery, FundOutResult> fundOutService,
             IGetService<BalanceQuery, BalanceResult> balanceService,
+            IGetService<AgentBalanceQuery, AgentBalanceResult> agentBalanceService,
             ICommandService<LogoutCommand> logoutService,
             ICommandService<CreatePlayerCommand> createPlayerService,
             IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
@@ -33,6 +35,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
             _memberTradeService = memberTradeService ?? throw new ArgumentNullException(nameof(memberTradeService));
             _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
             _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
+            _agentBalanceService = agentBalanceService ?? throw new ArgumentNullException(nameof(agentBalanceService));
             _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
             _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
             _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
@@ -46,7 +49,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                        new(request.ApiUrl),
                        request.VendorId,
                        request.Signature,
-                       request.PlayerCode,
+                       request.User,
                        request.Password,
                        request.UserName)).ConfigureAwait(false);
 
@@ -62,7 +65,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.Amount)).ConfigureAwait(false);
 
@@ -84,7 +87,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 request.Signature,
                 request.StartTime.ToDateTimeOffset(),
                 request.EndTime.ToDateTimeOffset(),
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.GameProviderTransactionId
             )).ToArrayAsync().ConfigureAwait(false);
@@ -120,7 +123,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode,
+                request.User,
                 request.TransactionId,
                 request.Amount)).ConfigureAwait(false);
 
@@ -141,8 +144,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 request.VendorId,
                 request.Signature,
                 request.StartTime.ToDateTimeOffset(),
-                request.EndTime.ToDateTimeOffset(),
-                request.PlayerCode
+                request.EndTime.ToDateTimeOffset()
             )).ToArrayAsync().ConfigureAwait(false);
 
             var reply = new GameInterfaceWMCasinoServiceGamePullRecordReply();
@@ -224,7 +226,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
                 Signature: request.Signature,
-                PlayerCode: request.PlayerCode,
+                User: request.User,
                 Password: request.Password,
                 Language: request.Language
                 )).ConfigureAwait(false);
@@ -238,13 +240,28 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
             };
         }
 
+        public override async Task<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalance(GameInterfaceWMCasinoServiceAgentBalanceRequest request, ServerCallContext context)
+        {
+            var result = await _agentBalanceService.GetAsync(new AgentBalanceQuery(
+                new(request.ApiUrl),
+                request.VendorId,
+                request.Signature)).ConfigureAwait(false);
+
+            return new GameInterfaceWMCasinoServiceAgentBalanceReply()
+            {
+                Success = result.Success,
+                Message = result.Message ?? string.Empty,
+                Balance = result.Balance ?? decimal.Zero,
+            };
+        }
+
         public override async Task<GameInterfaceWMCasinoServiceBalanceReply> GetBalance(GameInterfaceWMCasinoServiceBalanceRequest request, ServerCallContext context)
         {
             var result = await _balanceService.GetAsync(new BalanceQuery(
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode)).ConfigureAwait(false);
+                request.User)).ConfigureAwait(false);
 
             return new GameInterfaceWMCasinoServiceBalanceReply()
             {
@@ -261,7 +278,7 @@ namespace Tgs.GameInterface.WMCasinoService.GrpcServices
                 new(request.ApiUrl),
                 request.VendorId,
                 request.Signature,
-                request.PlayerCode)).ConfigureAwait(false);
+                request.User)).ConfigureAwait(false);
 
             return new GameInterfaceWMCasinoServiceReply()
             {

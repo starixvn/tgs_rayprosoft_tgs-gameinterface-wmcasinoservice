@@ -20,8 +20,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 VendorId = query.VendorId,
                 Signature = query.Signature,
                 StartTime = query.StartTime,
-                EndTime = query.EndTime,
-                User = query.PlayerCode,
+                EndTime = query.EndTime
             };
 
             var result = await _client

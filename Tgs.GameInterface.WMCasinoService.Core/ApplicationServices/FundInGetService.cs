@@ -18,7 +18,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
             {
                 VendorId = query.VendorId,
                 Signature = query.Signature,
-                User = query.PlayerCode,
+                User = query.User,
                 Money = -query.Amount,
                 Order = query.TransactionId
             };
@@ -26,8 +26,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
             var result = await _client.ChangeBalanceAsync(
                 query.ApiUrl,
                 request,
-                cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return new FundInResult(
                 Success: result.Success,
