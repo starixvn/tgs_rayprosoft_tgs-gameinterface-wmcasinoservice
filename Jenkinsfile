@@ -6,7 +6,7 @@ pipeline {
     
     environment {
         BuildConfiguration="Debug"
-        ImageName="harbor.rpgp.cc/tgs/game-gameinterface-wmcasino-service"
+        ImageName="pgtgs/game-gameinterface-wmcasino-service"
     }
 
     stages {
