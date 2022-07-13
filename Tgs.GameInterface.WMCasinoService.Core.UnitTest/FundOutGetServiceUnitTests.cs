@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -19,7 +16,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
             string transactionId = Guid.NewGuid().ToString("N");
             decimal amount = 100m;
 
@@ -27,18 +24,18 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest
                 ApiUrl: apiUrl,
                 VendorId: vendorId,
                 Signature: sign,
-                PlayerCode: playerCode,
+                User: user,
                 TransactionId: transactionId,
                 Amount: amount);
 
-            var fakeClient = Substitute.For<IGameApiClient>();           
+            var fakeClient = Substitute.For<IGameApiClient>();
 
             var result = new ChangeBalanceResponse
             {
                 ErrorCode = 0,
                 Message = "操作成功",
                 CurrentBalance = 200m,
-                TransactionId = transactionId, 
+                TransactionId = transactionId,
                 Success = true,
                 GameProviderTransactionId = "2147648076"
             };

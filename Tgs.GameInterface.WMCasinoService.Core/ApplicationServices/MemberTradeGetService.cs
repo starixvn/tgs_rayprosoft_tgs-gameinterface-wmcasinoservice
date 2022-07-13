@@ -21,7 +21,7 @@ namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
                 Signature = query.Signature,
                 StartTime = query.StartTime,
                 EndTime = query.EndTime,
-                User = query.PlayerCode,
+                User = query.User,
                 OrderId = query.GameProviderTransactionId,
                 Order = query.TransactionId
             };

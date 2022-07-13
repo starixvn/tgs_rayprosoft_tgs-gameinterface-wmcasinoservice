@@ -18,7 +18,7 @@
         /// 帐号
         /// </summary>
         /// <value>
-        /// playerCode
+        /// wmtf_{playerCode}_{brandCode}
         /// </value>
         public string? User { get; init; }
         /// <summary>
@@ -34,7 +34,7 @@
         /// <value>
         /// The end time.
         /// </value>
-        public DateTimeOffset? EndTime { get; init; }
+        public DateTimeOffset EndTime { get; init; }
         /// <summary>
         /// 0:抓下注时间, 1:抓结算时间
         /// </summary>

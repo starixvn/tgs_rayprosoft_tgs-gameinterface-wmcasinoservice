@@ -15,6 +15,7 @@ service GameInterfaceWMCasinoService {
 	rpc FundOrder (GameInterfaceWMCasinoServiceFundOrderRequest) returns (GameInterfaceWMCasinoServiceFundOrderReply);
 	rpc FundOut (GameInterfaceWMCasinoServiceFundRequest) returns (GameInterfaceWMCasinoServiceFundReply);
 	rpc GetBalance (GameInterfaceWMCasinoServiceBalanceRequest) returns (GameInterfaceWMCasinoServiceBalanceReply);
+	rpc GetAgentBalance (GameInterfaceWMCasinoServiceAgentBalanceRequest) returns (GameInterfaceWMCasinoServiceAgentBalanceReply);
 	rpc KickPlayer (GameInterfaceWMCasinoServiceKickPlayerRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc KickAllPlayer (GameInterfaceWMCasinoServiceKickAllPlayersRequest) returns (GameInterfaceWMCasinoServiceReply);
 	rpc GameUrl (GameInterfaceWMCasinoServiceGameUrlRequest) returns (GameInterfaceWMCasinoServiceGameUrlReply);
@@ -26,7 +27,7 @@ message GameInterfaceWMCasinoServiceCreatePlayerRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
-	string player_code = 4;
+	string user = 4;
 	string password = 5;
 	string user_name = 6;
 }
@@ -35,7 +36,7 @@ message GameInterfaceWMCasinoServiceFundRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
-	string player_code = 4;
+	string user = 4;
 	string transaction_id = 5;
 	phoenix.protobuf.DecimalValue amount = 6;
 }
@@ -46,7 +47,7 @@ message GameInterfaceWMCasinoServiceFundOrderRequest {
 	string signature = 3;
 	google.protobuf.Timestamp start_time = 4; 
     google.protobuf.Timestamp end_time = 5; 
-	string player_code = 6;
+	string user = 6;
 	string transaction_id = 7;
 	string game_provider_transaction_id = 8;
 }
@@ -55,14 +56,20 @@ message GameInterfaceWMCasinoServiceBalanceRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
-	string player_code = 4;
+	string user = 4;
+}
+
+message GameInterfaceWMCasinoServiceAgentBalanceRequest {
+	string api_url = 1;
+	string vendor_id = 2;
+	string signature = 3;	
 }
 
 message GameInterfaceWMCasinoServiceKickPlayerRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
-	string player_code = 4;
+	string user = 4;
 }
 
 message GameInterfaceWMCasinoServiceKickAllPlayersRequest {
@@ -75,9 +82,9 @@ message GameInterfaceWMCasinoServiceGameUrlRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
-	string player_code = 4;
+	string user = 4;
 	string password = 5;
-	int32 language = 6;
+	int32  language = 6;
 }
 
 message GameInterfaceWMCasinoServiceGamePullRecordeRequest {
@@ -85,8 +92,7 @@ message GameInterfaceWMCasinoServiceGamePullRecordeRequest {
 	string vendor_id = 2;
 	string signature = 3;
 	google.protobuf.Timestamp start_time = 4; 
-    google.protobuf.Timestamp end_time = 5; 
-	string player_code = 6;
+    google.protobuf.Timestamp end_time = 5;
 }
 
 message GameInterfaceWMCasinoServiceGameUnsettleRequest {
@@ -125,7 +131,6 @@ message GameInterfaceWMCasinoServiceFundOrder {
 	string user = 8;
 }
 
-
 message GameInterfaceWMCasinoServiceBalanceReply {
 	bool success = 1;
 	bool is_player_exist = 2;
@@ -133,7 +138,11 @@ message GameInterfaceWMCasinoServiceBalanceReply {
 	phoenix.protobuf.DecimalValue balance = 4;
 }
 
-
+message GameInterfaceWMCasinoServiceAgentBalanceReply {
+	bool success = 1;	
+	string message = 2;
+	phoenix.protobuf.DecimalValue balance = 3;
+}
 
 message GameInterfaceWMCasinoServiceGameUrlReply {
 	bool success = 1;

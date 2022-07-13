@@ -23,7 +23,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029",
+        ///             "user": "wmtf_4ucmqplxb029_GPI",
         ///             "password": "TgsP@ssword",
         ///             "userName": "4ucmqplxb029"
         ///         }
@@ -36,7 +36,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.ApiUrl,
                     model.VendorId,
                     model.Signature,
-                    model.PlayerCode,
+                    model.User,
                     model.Password,
                     model.UserName));
 
@@ -54,7 +54,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029",
+        ///             "user": "wmtf_4ucmqplxb029_GPI",
         ///             "transactionId": "654BD1F6-BFD0-EA6D-AB72-471BF2758EB5",
         ///             "amount": 10
         ///         }
@@ -69,7 +69,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.ApiUrl,
                     model.VendorId,
                     model.Signature,
-                    model.PlayerCode,
+                    model.User,
                     model.TransactionId,
                     model.Amount))
                 .ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029",
+        ///             "user": "wmtf_4ucmqplxb029_GPI",
         ///             "transactionId": "654BD1F6-BFD0-EA6D-AB72-471BF2758EB5",
         ///             "amount": 100
         ///         }
@@ -111,7 +111,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.ApiUrl,
                     model.VendorId,
                     model.Signature,
-                    model.PlayerCode,
+                    model.User,
                     model.TransactionId,
                     model.Amount))
                 .ConfigureAwait(false);
@@ -138,7 +138,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029",
+        ///             "user": "wmtf_4ucmqplxb029_GPI",
         ///             "password": "TgsP@ssword",
         ///             "language": 0
         ///         }
@@ -153,7 +153,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.ApiUrl,
                     model.VendorId,
                     model.Signature,
-                    model.PlayerCode,
+                    model.User,
                     model.Password,
                     model.Language))
                 .ConfigureAwait(false);
@@ -163,6 +163,40 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 result.IsPlayerExist,
                 result.Message,
                 result.GameUrl);
+        }
+
+        /// <summary>
+        /// Gets the agent balance asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
+        ///             "vendorId": "hpg02twapi",
+        ///             "signature": "89448b444ed2e922ddc3aa0753370238"
+        ///         }
+        /// </remarks>
+        [HttpPost("agentBalance")]
+        public async ValueTask<AgentBalanceResultViewModel> GetAgentBalanceAsync(
+            [FromServices] IGetService<AgentBalanceQuery, AgentBalanceResult> service,
+            AgentBalanceQueryViewModel model)
+        {
+            var result = await service
+                .GetAsync(new AgentBalanceQuery(
+                    model.ApiUrl,
+                    model.VendorId,
+                    model.Signature))
+                .ConfigureAwait(false);
+
+            return new AgentBalanceResultViewModel(
+                result.Success,
+                result.Message,
+                result.Balance);
         }
 
         /// <summary>
@@ -179,7 +213,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029"
+        ///             "user": "wmtf_4ucmqplxb029_GPI"
         ///         }
         /// </remarks>
         [HttpPost("balance")]
@@ -192,7 +226,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.ApiUrl,
                     model.VendorId,
                     model.Signature,
-                    model.PlayerCode))
+                    model.User))
                 .ConfigureAwait(false);
 
             return new BalanceResultViewModel(
@@ -202,6 +236,24 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                 result.Balance);
         }
 
+        /// <summary>
+        /// Gets the game pull record asynchronous.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <b>Example</b><br />
+        ///
+        ///     Post
+        ///         {
+        ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
+        ///             "vendorId": "hpg02twapi",
+        ///             "signature": "89448b444ed2e922ddc3aa0753370238",
+        ///             "startTime": "2022-06-20T01:30:00.000Z",
+        ///             "endTime": "2022-06-20T01:35:00.000Z"
+        ///         }
+        /// </remarks>
         [HttpPost("game/pullrecord")]
         public async IAsyncEnumerable<GamePullRecordResultViewModel> GetGamePullRecordAsync(
             [FromServices] IQueryService<GamePullRecordQuery, GamePullRecordResult> service,
@@ -213,8 +265,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.VendorId,
                     model.Signature,
                     model.StartTime,
-                    model.EndTime,
-                    model.PlayerCode))
+                    model.EndTime))
                 .ToArrayAsync()
                 .ConfigureAwait(false);
 
@@ -322,7 +373,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029"
+        ///             "user": "wmtf_4ucmqplxb029_GPI"
         ///         }
         /// </remarks>
         [HttpPost("transaction")]
@@ -337,7 +388,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
                     model.Signature,
                     model.StartTime,
                     model.EndTime,
-                    model.PlayerCode,
+                    model.User,
                     model.TransactionId,
                     model.GameProviderTransactionId))
                 .ToArrayAsync()
@@ -376,7 +427,7 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
         ///             "apiUrl": "https://api.a45.me/api/public/Gateway.php",
         ///             "vendorId": "hpg02twapi",
         ///             "signature": "89448b444ed2e922ddc3aa0753370238",
-        ///             "playerCode": "4ucmqplxb029"
+        ///             "user": "wmtf_4ucmqplxb029_GPI"
         ///         }
         /// </remarks>
         [HttpPost("kick")]
@@ -387,6 +438,6 @@ namespace Tgs.GameInterface.WMCasinoService.Controllers
             model.ApiUrl,
             model.VendorId,
             model.Signature,
-            model.PlayerCode));
+            model.User));
     }
 }

@@ -23,7 +23,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb029";
+            var user = "wmtf_4ucmqplxb029_GPI";
 
             var response = new
             {
@@ -40,7 +40,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
                         op_code = "121",
                         subtotal = "720.0000",
                         ordernum = "D18D0651-FDE1-6CDF-1717-57D44BAE",
-                        user = "4ucmqplxb029"
+                        user = "wmtf_4ucmqplxb029_GPI"
                     }
                 }
             };
@@ -60,7 +60,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode,
+                User = user,
                 StartTime = new DateTime(2022, 6, 17, 16, 0, 0),
                 EndTime = null,
                 Order = null,
@@ -77,7 +77,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
             var sign = "testsign";
-            var playerCode = "4ucmqplxb028";
+            var user = "4ucmqplxb028";
 
             var response = new
             {
@@ -101,7 +101,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             {
                 VendorId = vendorId,
                 Signature = sign,
-                User = playerCode,
+                User = user,
                 StartTime = null,
                 EndTime = null,
                 Order = null,
