@@ -35,7 +35,28 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
             };
 
-            var document = await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken);
+            var retryCount = 3;
+
+            var retryPolicy =
+                Policy
+                    .HandleResult<JsonDocument>(r =>
+                        {
+                            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+                            return errorCode is 10804;
+                        })
+                    .WaitAndRetryAsync(
+                        retryCount,
+                        retryAttempt => TimeSpan.FromSeconds(5),
+                        (result, retryTime, context) =>
+                        {
+                            _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                                DateTime.Now.ToString("o"),
+                                parameters,
+                                result,
+                                retryTime);
+                        });
+
+            var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken));
 
             if (document is null)
             {
