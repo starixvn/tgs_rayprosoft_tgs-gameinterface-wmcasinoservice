@@ -71,5 +71,40 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             Assert.AreEqual(response.result.First().round, result.Result.First().Round);
             Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
         }
+
+        [TestMethod]
+        public void Timestamp_Is_Abnormal()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var vendorId = "testvendorid";
+            var sign = "testsign";
+
+            var response = new
+            {
+                errorCode = (int)GameApiClientError.UnusualTimestamp,
+                errorMessage = "Timestamp is abnormal, more than 30 seconds",
+                result = default(Nullable)
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler
+                .Expect(HttpMethod.Post, "")
+                .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+            var request = new GetUnsettleReportRequest
+            {
+                VendorId = vendorId,
+                Signature = sign,
+                Time = new DateTime(2022, 6, 19, 0, 0, 0)
+            };
+
+            _ = Assert.ThrowsExceptionAsync<Exception>(async () => await client.GetUnsettleReportAsync(apiUrl, request));
+        }
     }
 }

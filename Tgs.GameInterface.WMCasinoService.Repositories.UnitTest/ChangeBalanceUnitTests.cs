@@ -53,7 +53,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
         }
 
         [TestMethod]
-        public async Task Fund_Failed_When_Error_Code_Is_10804_Will_Retry()
+        public void Fund_Failed_When_Error_Code_Is_10804_Will_Retry()
         {
             var apiUrl = new Uri("http://localhost/");
             var vendorId = "testvendorid";
