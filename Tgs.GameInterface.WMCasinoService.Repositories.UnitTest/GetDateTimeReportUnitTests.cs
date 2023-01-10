@@ -134,5 +134,48 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
             Assert.AreEqual(response.result.First().round, result.Result.First().Round);
             Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
         }
+
+        [TestMethod]
+        public void Timestamp_Is_Abnormal()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var vendorId = "testvendorid";
+            var sign = "testsign";
+            var user = "4ucmqplxb028";
+
+            var response = new
+            {
+                errorCode = (int)GameApiClientError.UnusualTimestamp,
+                errorMessage = "Timestamp is abnormal, more than 30 seconds",
+                result = default(Nullable)
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler
+                .Expect(HttpMethod.Post, "")
+                .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+            var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
+            var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
+
+            var request = new GetDateTimeReportRequest
+            {
+                VendorId = vendorId,
+                Signature = sign,
+                User = user,
+                StartTime = startTime,
+                EndTime = endTime,
+                DataType = null,
+                TimeType = null,
+                GameNo1 = null
+            };
+
+            _ = Assert.ThrowsExceptionAsync<Exception>(async () => await client.GetDateTimeReportAsync(apiUrl, request));
+        }
     }
 }

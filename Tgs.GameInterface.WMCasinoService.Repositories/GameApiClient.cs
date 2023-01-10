@@ -222,6 +222,11 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                                 retryMaxSeconds = 30;
                             else if (errorCode == 10418)
                                 retryMaxSeconds = 10;
+                            else if (errorCode == 10202)
+                            {
+                                retryMaxSeconds = 5;
+                                parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                            }
                             return errorCode is 10411 or 10418;
                         })
                     .WaitAndRetryAsync(
@@ -403,6 +408,11 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                             retryMaxSeconds = 30;
                         else if (errorCode == 10418)
                             retryMaxSeconds = 10;
+                        else if (errorCode == 10202)
+                        {
+                            retryMaxSeconds = 5;
+                            parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                        }
                         return errorCode is 10411 or 10418;
                     })
                     .WaitAndRetryAsync(
@@ -623,7 +633,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             }
         }
 
-        private async ValueTask<JsonDocument?> PostAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
+        private async ValueTask<JsonDocument> PostAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
         {
             logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
 
@@ -665,7 +675,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
 
             _ = httpResponseMessage.EnsureSuccessStatusCode();
 
-            return JsonDocument.Parse(responseMessage);
+            return JsonDocument.Parse(responseMessage)!;
         }
     }
 }
