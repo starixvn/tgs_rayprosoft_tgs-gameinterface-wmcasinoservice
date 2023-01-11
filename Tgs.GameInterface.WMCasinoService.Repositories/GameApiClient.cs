@@ -1,6 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
+using System.Text.Unicode;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Tgs.GameInterface.WMCasinoService.Core;
@@ -31,8 +36,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["signature"] = request.Signature,
                 ["user"] = request.User,
                 ["money"] = request.Money.ToString(),
-                ["order"] = request.Order == null ? string.Empty : request.Order.ToString(),
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["order"] = request.Order == null ? string.Empty : request.Order.ToString()
             };
 
             var retryCount = 3;
@@ -101,8 +105,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 ["cmd"] = "GetAgentBalance",
                 ["vendorId"] = request.VendorId,
-                ["signature"] = request.Signature,
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["signature"] = request.Signature
             };
 
             var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken);
@@ -139,8 +142,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["cmd"] = "GetBalance",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["user"] = request.User,
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["user"] = request.User
             };
 
             var document = await PostAsync(apiUrl, parameters, "GetBalance", cancellationToken);
@@ -195,8 +197,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
                 ["startTime"] = startTime.ToString("yyyyMMddHHmmss"),
-                ["endTime"] = endTime.ToString("yyyyMMddHHmmss"),
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["endTime"] = endTime.ToString("yyyyMMddHHmmss")
             };
 
             if (request.User != null)
@@ -216,19 +217,21 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             var retryPolicy =
                 Policy
                     .HandleResult<JsonDocument>(r =>
+                    {
+                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
+                        ?? throw new Exception("Get Date Time Report Failed");
+                        if (errorCode is not 10411 and not 10202)
                         {
-                            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
-                            if (errorCode == 10411)
-                                retryMaxSeconds = 30;
-                            else if (errorCode == 10418)
-                                retryMaxSeconds = 10;
-                            else if (errorCode == 10202)
-                            {
-                                retryMaxSeconds = 5;
-                                parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-                            }
-                            return errorCode is 10411 or 10418;
-                        })
+                            return false;
+                        }
+
+                        retryMaxSeconds = errorCode switch
+                        {
+                            10411 => 30,
+                            _ => 1
+                        };
+                        return true;
+                    })
                     .WaitAndRetryAsync(
                         retryCount,
                         retryAttempt => TimeSpan.FromSeconds(Random.Shared.Next(1, maxValue: retryMaxSeconds)),
@@ -294,7 +297,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                     }).ToArray()
                 };
             }
-            else if (errorCode == 107)
+            else if (errorCode is 107 or 10418)
             {
                 return new GetDateTimeReportResponse
                 {
@@ -317,8 +320,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             {
                 ["cmd"] = "GetMemberTradeReport",
                 ["vendorId"] = request.VendorId,
-                ["signature"] = request.Signature,
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["signature"] = request.Signature
             };
 
             if (request.User != null)
@@ -393,8 +395,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["cmd"] = "GetUnsettleReport",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["Time"] = request.Time.ToString("yyyyMMdd"),
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ["Time"] = request.Time.ToString("yyyyMMdd")
             };
 
             var retryCount = 3;
@@ -403,17 +404,19 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 Policy
                     .HandleResult<JsonDocument>(r =>
                     {
-                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
-                        if (errorCode == 10411)
-                            retryMaxSeconds = 30;
-                        else if (errorCode == 10418)
-                            retryMaxSeconds = 10;
-                        else if (errorCode == 10202)
+                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
+                        ?? throw new Exception("Get Unsettle Report Failed");
+                        if (errorCode is not 10411 and not 10202)
                         {
-                            retryMaxSeconds = 5;
-                            parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                            return false;
                         }
-                        return errorCode is 10411 or 10418;
+
+                        retryMaxSeconds = errorCode switch
+                        {
+                            10411 => 30,
+                            _ => 1
+                        };
+                        return true;
                     })
                     .WaitAndRetryAsync(
                         retryCount,
@@ -467,7 +470,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                     }).ToArray()
                 };
             }
-            else if (errorCode == 107)
+            else if (errorCode is 107 or 10418)
             {
                 return new GetUnsettleReportResponse
                 {
@@ -493,7 +496,47 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["signature"] = signature
             };
 
-            var document = await PostAsync(apiUrl, parameters, "Hello", cancellationToken).ConfigureAwait(false);
+            var logPrefix = $"{nameof(GameApiClient).ToLower()}.Hello";
+
+            var sw = Stopwatch.StartNew();
+
+            HttpContent content = new FormUrlEncodedContent(parameters);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded")
+            {
+                CharSet = "UTF-8"
+            };
+
+            var httpResponseMessage = await _client.PostAsync(apiUrl, content, cancellationToken);
+
+            sw.Stop();
+
+            var responseMessage = default(string);
+
+            using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
+            {
+                responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
+            }
+
+            var apiLogEvent = new ApiLogEvent
+            {
+                Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
+                Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
+                Prefix = logPrefix,
+                ServerName = Environment.MachineName.NoLongerThan(128),
+                RequestHeaders = httpResponseMessage.RequestMessage?.Headers + httpResponseMessage.RequestMessage?.Content?.Headers?.ToString(),
+                RequestContent = (await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)).NoLongerThan(4096),
+                ResponseHeaders = httpResponseMessage.Headers.ToString(),
+                ResponseContent = responseMessage.NoLongerThan(4096),
+                ResponseCode = (short)httpResponseMessage.StatusCode,
+                ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
+                RecordedOn = DateTimeOffset.UtcNow
+            };
+            _tgsLog.LogApi(apiLogEvent);
+            _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+
+            _ = httpResponseMessage.EnsureSuccessStatusCode();
+
+            var document = JsonDocument.Parse(responseMessage)!;
 
             return new HelloResponse
             {
@@ -510,8 +553,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["cmd"] = "LogoutGame",
                 ["vendorId"] = request.VendorId,
                 ["signature"] = request.Signature,
-                ["user"] = request.User == null ? string.Empty : request.User.ToString(),
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ["user"] = request.User == null ? string.Empty : request.User.ToString()
             };
             var document = await PostAsync(apiUrl, parameters, "LogoutGame", cancellationToken);
 
@@ -547,8 +589,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["signature"] = request.Signature,
                 ["user"] = request.User,
                 ["password"] = request.Password,
-                ["username"] = request.Username,
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ["username"] = request.Username
             };
 
             var document = await PostAsync(apiUrl, parameters, "MemberRegister", cancellationToken);
@@ -586,8 +627,7 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
                 ["signature"] = request.Signature,
                 ["user"] = request.User,
                 ["password"] = request.Password,
-                ["lang"] = request.Lang.ToString(),
-                ["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ["lang"] = request.Lang.ToString()
             };
 
             var document = await PostAsync(apiUrl, parameters, "SigninGame", cancellationToken);
@@ -633,9 +673,11 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories
             }
         }
 
-        private async ValueTask<JsonDocument> PostAsync(Uri apiUrl, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
+        private async ValueTask<JsonDocument> PostAsync(Uri apiUrl, Dictionary<string, string> parameters, string logPrefix, CancellationToken cancellationToken = default)
         {
             logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
+
+            parameters.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
 
             var sw = Stopwatch.StartNew();
 
