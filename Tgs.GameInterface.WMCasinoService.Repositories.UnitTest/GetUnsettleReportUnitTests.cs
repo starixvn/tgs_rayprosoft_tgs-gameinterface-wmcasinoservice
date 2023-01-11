@@ -106,5 +106,43 @@ namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
 
             _ = Assert.ThrowsExceptionAsync<Exception>(async () => await client.GetUnsettleReportAsync(apiUrl, request));
         }
+
+        [TestMethod]
+        public async Task An_Interval_Of_10_Seconds_Is_Required_If_No_Data_Is_Found()
+        {
+            var apiUrl = new Uri("http://localhost/");
+            var vendorId = "testvendorid";
+            var sign = "testsign";
+
+            var response = new
+            {
+                errorCode = (int)GameApiClientError.TryAfter10Sec,
+                errorMessage = "10秒內禁止重複操作",
+                result = default(Nullable)
+            };
+
+            var content = JsonSerializer.Serialize(response);
+            var handler = new MockHttpMessageHandler();
+            _ = handler
+                .Expect(HttpMethod.Post, "")
+                .Respond(HttpStatusCode.OK, new StringContent(content));
+
+            var fakeHttpClient = handler.ToHttpClient();
+            var fakeLog = NullLogger<GameApiClient>.Instance;
+            var fakeTgsLog = Substitute.For<ITgsLog>();
+            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+            var request = new GetUnsettleReportRequest
+            {
+                VendorId = vendorId,
+                Signature = sign,
+                Time = new DateTime(2022, 6, 19, 0, 0, 0)
+            };
+
+            var result = await client.GetUnsettleReportAsync(apiUrl, request);
+
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Result.Any());
+        }
     }
 }
