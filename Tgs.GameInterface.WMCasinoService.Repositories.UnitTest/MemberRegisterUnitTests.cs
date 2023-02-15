@@ -11,48 +11,47 @@ using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.Logging;
 
-namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
+namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest;
+
+[TestClass]
+public class MemberRegisterUnitTests
 {
-    [TestClass]
-    public class MemberRegisterUnitTests
+    [TestMethod]
+    public async Task Normal_Process()
     {
-        [TestMethod]
-        public async Task Normal_Process()
+        var apiUrl = new Uri("http://localhost/");
+        var vendorId = "testvendorid";
+        var sign = "testsign";
+        var user = "wmtf_4ucmqplxb029_GPI";
+
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var vendorId = "testvendorid";
-            var sign = "testsign";
-            var user = "wmtf_4ucmqplxb029_GPI";
+            errorCode = (int)GameApiClientError.Success,
+            errorMessage = "操作成功",
+            result = "新增完成"
+        };
 
-            var response = new
-            {
-                errorCode = (int)GameApiClientError.Success,
-                errorMessage = "操作成功",
-                result = "新增完成"
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler
+            .Expect(HttpMethod.Post, "")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler
-                .Expect(HttpMethod.Post, "")
-                .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var request = new MemberRegisterRequest
+        {
+            VendorId = vendorId,
+            Signature = sign,
+            User = user,
+            Password = "password",
+            Username = user
+        };
+        var result = await client.MemberRegisterAsync(apiUrl, request);
 
-            var request = new MemberRegisterRequest
-            {
-                VendorId = vendorId,
-                Signature = sign,
-                User = user,
-                Password = "password",
-                Username = user
-            };
-            var result = await client.MemberRegisterAsync(apiUrl, request);
-
-            Assert.AreEqual(response.errorCode, result.ErrorCode);
-        }
+        Assert.AreEqual(response.errorCode, result.ErrorCode);
     }
 }

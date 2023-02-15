@@ -12,137 +12,136 @@ using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.Logging;
 
-namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest
+namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest;
+
+[TestClass]
+public class GetUnsettleReportUnitTests
 {
-    [TestClass]
-    public class GetUnsettleReportUnitTests
+    [TestMethod]
+    public async Task An_Interval_Of_10_Seconds_Is_Required_If_No_Data_Is_Found()
     {
-        [TestMethod]
-        public async Task Normal_Process()
-        {
-            var apiUrl = new Uri("http://localhost/");
-            var vendorId = "testvendorid";
-            var sign = "testsign";
+        var apiUrl = new Uri("http://localhost/");
+        var vendorId = "testvendorid";
+        var sign = "testsign";
 
-            var response = new
+        var response = new
+        {
+            errorCode = (int)GameApiClientError.TryAfter10Sec,
+            errorMessage = "10秒內禁止重複操作",
+            result = default(Nullable)
+        };
+
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler
+            .Expect(HttpMethod.Post, "")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
+
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+
+        var request = new GetUnsettleReportRequest
+        {
+            VendorId = vendorId,
+            Signature = sign,
+            Time = new DateTime(2022, 6, 19, 0, 0, 0)
+        };
+
+        var result = await client.GetUnsettleReportAsync(apiUrl, request);
+
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.Result.Any());
+    }
+
+    [TestMethod]
+    public async Task Normal_Process()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var vendorId = "testvendorid";
+        var sign = "testsign";
+
+        var response = new
+        {
+            errorCode = (int)GameApiClientError.Success,
+            errorMessage = "操作成功",
+            result = new[]
             {
-                errorCode = (int)GameApiClientError.Success,
-                errorMessage = "操作成功",
-                result = new[]
+                new
                 {
-                    new
-                    {
-                        user = "4ucmqplxb029",
-                        betId="179229908",
-                        gid="108",
-                        @event="113060931",
-                        eventChild="97",
-                        betTime="2022-06-20 09:37:25",
-                        betResult="小",
-                        bet="20.0000",
-                        tableId="1",
-                        commission="0",
-                        round = "113060931",
-                        subround ="97",
-                        gname ="色碟"
-                    }
+                    user = "4ucmqplxb029",
+                    betId="179229908",
+                    gid="108",
+                    @event="113060931",
+                    eventChild="97",
+                    betTime="2022-06-20 09:37:25",
+                    betResult="小",
+                    bet="20.0000",
+                    tableId="1",
+                    commission="0",
+                    round = "113060931",
+                    subround ="97",
+                    gname ="色碟"
                 }
-            };
+            }
+        };
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler
-                .Expect(HttpMethod.Post, "")
-                .Respond(HttpStatusCode.OK, new StringContent(content));
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler
+            .Expect(HttpMethod.Post, "")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var request = new GetUnsettleReportRequest
-            {
-                VendorId = vendorId,
-                Signature = sign,
-                Time = new DateTime(2022, 6, 19, 0, 0, 0)
-            };
-            var result = await client.GetUnsettleReportAsync(apiUrl, request);
-
-            Assert.AreEqual(response.result.First().round, result.Result.First().Round);
-            Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
-        }
-
-        [TestMethod]
-        public void Timestamp_Is_Abnormal()
+        var request = new GetUnsettleReportRequest
         {
-            var apiUrl = new Uri("http://localhost/");
-            var vendorId = "testvendorid";
-            var sign = "testsign";
+            VendorId = vendorId,
+            Signature = sign,
+            Time = new DateTime(2022, 6, 19, 0, 0, 0)
+        };
+        var result = await client.GetUnsettleReportAsync(apiUrl, request);
 
-            var response = new
-            {
-                errorCode = (int)GameApiClientError.UnusualTimestamp,
-                errorMessage = "Timestamp is abnormal, more than 30 seconds",
-                result = default(Nullable)
-            };
+        Assert.AreEqual(response.result.First().round, result.Result.First().Round);
+        Assert.AreEqual(response.result.First().subround, result.Result.First().SubRound);
+    }
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler
-                .Expect(HttpMethod.Post, "")
-                .Respond(HttpStatusCode.OK, new StringContent(content));
+    [TestMethod]
+    public void Timestamp_Is_Abnormal()
+    {
+        var apiUrl = new Uri("http://localhost/");
+        var vendorId = "testvendorid";
+        var sign = "testsign";
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
-
-            var request = new GetUnsettleReportRequest
-            {
-                VendorId = vendorId,
-                Signature = sign,
-                Time = new DateTime(2022, 6, 19, 0, 0, 0)
-            };
-
-            _ = Assert.ThrowsExceptionAsync<Exception>(async () => await client.GetUnsettleReportAsync(apiUrl, request));
-        }
-
-        [TestMethod]
-        public async Task An_Interval_Of_10_Seconds_Is_Required_If_No_Data_Is_Found()
+        var response = new
         {
-            var apiUrl = new Uri("http://localhost/");
-            var vendorId = "testvendorid";
-            var sign = "testsign";
+            errorCode = (int)GameApiClientError.UnusualTimestamp,
+            errorMessage = "Timestamp is abnormal, more than 30 seconds",
+            result = default(Nullable)
+        };
 
-            var response = new
-            {
-                errorCode = (int)GameApiClientError.TryAfter10Sec,
-                errorMessage = "10秒內禁止重複操作",
-                result = default(Nullable)
-            };
+        var content = JsonSerializer.Serialize(response);
+        var handler = new MockHttpMessageHandler();
+        _ = handler
+            .Expect(HttpMethod.Post, "")
+            .Respond(HttpStatusCode.OK, new StringContent(content));
 
-            var content = JsonSerializer.Serialize(response);
-            var handler = new MockHttpMessageHandler();
-            _ = handler
-                .Expect(HttpMethod.Post, "")
-                .Respond(HttpStatusCode.OK, new StringContent(content));
+        var fakeHttpClient = handler.ToHttpClient();
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeTgsLog = Substitute.For<ITgsLog>();
+        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
 
-            var fakeHttpClient = handler.ToHttpClient();
-            var fakeLog = NullLogger<GameApiClient>.Instance;
-            var fakeTgsLog = Substitute.For<ITgsLog>();
-            var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var request = new GetUnsettleReportRequest
+        {
+            VendorId = vendorId,
+            Signature = sign,
+            Time = new DateTime(2022, 6, 19, 0, 0, 0)
+        };
 
-            var request = new GetUnsettleReportRequest
-            {
-                VendorId = vendorId,
-                Signature = sign,
-                Time = new DateTime(2022, 6, 19, 0, 0, 0)
-            };
-
-            var result = await client.GetUnsettleReportAsync(apiUrl, request);
-
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.Result.Any());
-        }
+        _ = Assert.ThrowsExceptionAsync<Exception>(async () => await client.GetUnsettleReportAsync(apiUrl, request));
     }
 }
