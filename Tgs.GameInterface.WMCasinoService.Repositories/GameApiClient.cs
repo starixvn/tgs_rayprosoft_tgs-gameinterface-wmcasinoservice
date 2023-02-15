@@ -658,7 +658,16 @@ internal class GameApiClient : IGameApiClient
     {
         logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
 
-        parameters.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+
+        if (!parameters.TryGetValue("timestamp", out _))
+        {
+            parameters.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+        }
+        else
+        {
+            parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+        }
+
 
         var sw = Stopwatch.StartNew();
 
