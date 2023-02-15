@@ -1,35 +1,34 @@
 ﻿using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
+namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
+
+internal class BalanceGetService : IGetService<BalanceQuery, BalanceResult>
 {
-    internal class BalanceGetService : IGetService<BalanceQuery, BalanceResult>
+    private readonly IGameApiClient _client;
+
+    public BalanceGetService(IGameApiClient client)
     {
-        private readonly IGameApiClient _client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+    }
 
-        public BalanceGetService(IGameApiClient client)
+    public async ValueTask<BalanceResult> GetAsync(BalanceQuery query, CancellationToken cancellationToken = default)
+    {
+        var request = new GetBalanceRequest
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+            VendorId = query.VendorId,
+            Signature = query.Signature,
+            User = query.User
+        };
+        var result = await _client.GetBalanceAsync(
+            query.ApiUrl,
+            request,
+            cancellationToken).ConfigureAwait(false);
 
-        public async ValueTask<BalanceResult> GetAsync(BalanceQuery query, CancellationToken cancellationToken = default)
-        {
-            var request = new GetBalanceRequest
-            {
-                VendorId = query.VendorId,
-                Signature = query.Signature,
-                User = query.User
-            };
-            var result = await _client.GetBalanceAsync(
-                query.ApiUrl,
-                request,
-                cancellationToken).ConfigureAwait(false);
-
-            return new BalanceResult(
-                result.Success,
-                result.IsPlayerExist,
-                result.Message,
-                result.Balance);
-        }
+        return new BalanceResult(
+            result.Success,
+            result.IsPlayerExist,
+            result.Message,
+            result.Balance);
     }
 }

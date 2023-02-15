@@ -2,51 +2,50 @@
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices
+namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
+
+internal class MemberTradeGetService : IQueryService<MemberTradeQuery, MemberTradeResult>
 {
-    internal class MemberTradeGetService : IQueryService<MemberTradeQuery, MemberTradeResult>
+    private readonly IGameApiClient _client;
+
+    public MemberTradeGetService(IGameApiClient client)
     {
-        private readonly IGameApiClient _client;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+    }
 
-        public MemberTradeGetService(IGameApiClient client)
+    public async IAsyncEnumerable<MemberTradeResult> QueryAsync(MemberTradeQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var request = new GetMemberTradeReportRequest
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+            VendorId = query.VendorId,
+            Signature = query.Signature,
+            StartTime = query.StartTime,
+            EndTime = query.EndTime,
+            User = query.User,
+            OrderId = query.GameProviderTransactionId,
+            Order = query.TransactionId
+        };
 
-        public async IAsyncEnumerable<MemberTradeResult> QueryAsync(MemberTradeQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        var result = await _client
+            .GetMemberTradeReportAsync(query.ApiUrl, request, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (result is null || result.Result.Any() is false)
+            yield break;
+
+        foreach (var item in result.Result)
         {
-            var request = new GetMemberTradeReportRequest
+            yield return new MemberTradeResult
             {
-                VendorId = query.VendorId,
-                Signature = query.Signature,
-                StartTime = query.StartTime,
-                EndTime = query.EndTime,
-                User = query.User,
-                OrderId = query.GameProviderTransactionId,
-                Order = query.TransactionId
+                AddTime = item.AddTime,
+                Mid = item.Mid,
+                Money = item.Money,
+                OpCode = item.OpCode,
+                OrderId = item.OrderId,
+                OrderNum = item.OrderNum,
+                SubTotal = item.SubTotal,
+                User = item.User
             };
-
-            var result = await _client
-                .GetMemberTradeReportAsync(query.ApiUrl, request, cancellationToken)
-                .ConfigureAwait(false);
-
-            if (result is null || result.Result.Any() is false)
-                yield break;
-
-            foreach (var item in result.Result)
-            {
-                yield return new MemberTradeResult
-                {
-                    AddTime = item.AddTime,
-                    Mid = item.Mid,
-                    Money = item.Money,
-                    OpCode = item.OpCode,
-                    OrderId = item.OrderId,
-                    OrderNum = item.OrderNum,
-                    SubTotal = item.SubTotal,
-                    User = item.User
-                };
-            }
         }
     }
 }

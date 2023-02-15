@@ -1,7 +1,6 @@
-﻿namespace Tgs.GameInterface.WMCasinoService.Client
+﻿namespace Tgs.GameInterface.WMCasinoService.Client;
+
+public class GameInterfaceWMCasinoServiceClientOptions
 {
-    public class GameInterfaceWMCasinoServiceClientOptions
-    {
-        public Uri BaseUrl { get; set; } = default!;
-    }
+    public Uri BaseUrl { get; set; } = default!;
 }
