@@ -178,10 +178,14 @@ internal class GameApiClient : IGameApiClient
 
     public async ValueTask<GetDateTimeReportResponse> GetDateTimeReportAsync(Uri apiUrl, GetDateTimeReportRequest request, CancellationToken cancellationToken = default)
     {
-        var cuiabaTime = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");//(UTC+08:00) Taipei
-
-        var startTime = TimeZoneInfo.ConvertTimeFromUtc(request.StartTime.UtcDateTime, cuiabaTime);
-        var endTime = TimeZoneInfo.ConvertTimeFromUtc(request.EndTime.UtcDateTime, cuiabaTime);
+        var timeZone = TimeZoneInfo
+            .CreateCustomTimeZone(
+                id: "Taipei Standard Time",
+                baseUtcOffset: TimeSpan.FromHours(+8),
+                displayName: "Taipei Standard Time",
+                standardDisplayName: "Taipei Standard Time");
+        var startTime = TimeZoneInfo.ConvertTimeFromUtc(request.StartTime.UtcDateTime, timeZone);
+        var endTime = TimeZoneInfo.ConvertTimeFromUtc(request.EndTime.UtcDateTime, timeZone);
 
         var parameters = new Dictionary<string, string>
         {
@@ -220,7 +224,7 @@ internal class GameApiClient : IGameApiClient
                     retryMaxSeconds = errorCode switch
                     {
                         10411 => 30,
-                        _ => 1
+                        _ => 10
                     };
                     return true;
                 })
@@ -400,7 +404,7 @@ internal class GameApiClient : IGameApiClient
                     retryMaxSeconds = errorCode switch
                     {
                         10411 => 30,
-                        _ => 1
+                        _ => 10
                     };
                     return true;
                 })
