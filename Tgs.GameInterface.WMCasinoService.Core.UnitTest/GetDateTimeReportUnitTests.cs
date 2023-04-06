@@ -6,11 +6,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 using RichardSzalay.MockHttp;
 using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
-using Tgs.Logging;
 
 namespace Tgs.GameInterface.WMCasinoService.Repositories.UnitTest;
 
@@ -40,8 +38,8 @@ public class GetDateTimeReportUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
+
         var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
         var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
@@ -83,8 +81,8 @@ public class GetDateTimeReportUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
+
         var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
         var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
@@ -158,8 +156,8 @@ public class GetDateTimeReportUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
+
         var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
         var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 
@@ -204,8 +202,8 @@ public class GetDateTimeReportUnitTests
 
         var fakeHttpClient = handler.ToHttpClient();
         var fakeLog = NullLogger<GameApiClient>.Instance;
-        var fakeTgsLog = Substitute.For<ITgsLog>();
-        var client = new GameApiClient(fakeHttpClient, fakeLog, fakeTgsLog);
+        var client = new GameApiClient(fakeLog, fakeHttpClient);
+
         var startTime = DateTime.Parse("2022-06-20T01:30:00.000Z");
         var endTime = DateTime.Parse("2022-06-20T01:35:00.000Z");
 

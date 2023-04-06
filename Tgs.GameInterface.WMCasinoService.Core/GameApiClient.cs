@@ -3,23 +3,21 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Polly;
-using Tgs.GameInterface.WMCasinoService.Core;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
-using Tgs.Logging;
 
-namespace Tgs.GameInterface.WMCasinoService.Repositories;
+namespace Tgs.GameInterface.WMCasinoService.Core;
 
 internal class GameApiClient : IGameApiClient
 {
     private readonly HttpClient _client;
     private readonly ILogger<GameApiClient> _logger;
-    private readonly ITgsLog _tgsLog;
 
-    public GameApiClient(HttpClient client, ILogger<GameApiClient> logger, ITgsLog tgsLog)
+    public GameApiClient(
+        ILogger<GameApiClient> logger,
+        HttpClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _tgsLog = tgsLog ?? throw new ArgumentNullException(nameof(tgsLog));
     }
 
     public async ValueTask<ChangeBalanceResponse> ChangeBalanceAsync(Uri apiUrl, ChangeBalanceRequest request, CancellationToken cancellationToken = default)
@@ -504,7 +502,7 @@ internal class GameApiClient : IGameApiClient
             responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
         }
 
-        var apiLogEvent = new ApiLogEvent
+        var apiLogEvent = new GameApiLogEvent
         {
             Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
             Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -518,7 +516,6 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _tgsLog.LogApi(apiLogEvent);
         _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
@@ -658,7 +655,6 @@ internal class GameApiClient : IGameApiClient
     {
         logPrefix = $"{nameof(GameApiClient).ToLower()}.{logPrefix}";
 
-
         if (!parameters.TryGetValue("timestamp", out _))
         {
             parameters.Add("timestamp", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
@@ -667,7 +663,6 @@ internal class GameApiClient : IGameApiClient
         {
             parameters["timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
         }
-
 
         var sw = Stopwatch.StartNew();
 
@@ -688,7 +683,7 @@ internal class GameApiClient : IGameApiClient
             responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
         }
 
-        var apiLogEvent = new ApiLogEvent
+        var apiLogEvent = new GameApiLogEvent
         {
             Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
             Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -702,7 +697,6 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _tgsLog.LogApi(apiLogEvent);
         _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();

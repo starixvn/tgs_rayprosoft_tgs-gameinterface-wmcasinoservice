@@ -18,10 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoService", "Tgs.GameInterface.WMCasinoService\Tgs.GameInterface.WMCasinoService.csproj", "{8B105B97-30B7-42AE-BC87-8C870CF9A41E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoService.Repositories", "Tgs.GameInterface.WMCasinoService.Repositories\Tgs.GameInterface.WMCasinoService.Repositories.csproj", "{F730A82A-76FB-49E9-8212-B9BA071C654D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.WMCasinoService.Repositories.UnitTest", "Tgs.GameInterface.WMCasinoService.Repositories.UnitTest\Tgs.GameInterface.WMCasinoService.Repositories.UnitTest.csproj", "{95D06695-2182-4F89-8D6B-FC8190B52BBD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,14 +40,6 @@ Global
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F730A82A-76FB-49E9-8212-B9BA071C654D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F730A82A-76FB-49E9-8212-B9BA071C654D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F730A82A-76FB-49E9-8212-B9BA071C654D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F730A82A-76FB-49E9-8212-B9BA071C654D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95D06695-2182-4F89-8D6B-FC8190B52BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95D06695-2182-4F89-8D6B-FC8190B52BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95D06695-2182-4F89-8D6B-FC8190B52BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95D06695-2182-4F89-8D6B-FC8190B52BBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

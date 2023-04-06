@@ -5,7 +5,7 @@ using NSubstitute;
 using Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 
-namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest;
+namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
 public class GameUrlGetServiceUnitTests

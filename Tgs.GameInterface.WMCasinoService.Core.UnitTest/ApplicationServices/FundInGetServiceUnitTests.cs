@@ -5,7 +5,7 @@ using NSubstitute;
 using Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 using Tgs.GameInterface.WMCasinoService.Core.Models;
 
-namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest;
+namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest.ApplicationServices;
 
 [TestClass]
 public class FundInGetServiceUnitTests
@@ -17,8 +17,8 @@ public class FundInGetServiceUnitTests
         var vendorId = "testvendorid";
         var sign = "testsign";
         var user = "wmtf_4ucmqplxb029_GPI";
-        string transactionId = Guid.NewGuid().ToString("N");
-        decimal amount = 100m;
+        var transactionId = Guid.NewGuid().ToString("N");
+        var amount = 100m;
 
         var query = new FundInQuery(
             ApiUrl: apiUrl,
