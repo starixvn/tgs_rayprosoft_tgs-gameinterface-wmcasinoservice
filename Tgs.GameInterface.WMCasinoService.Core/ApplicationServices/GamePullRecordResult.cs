@@ -180,4 +180,8 @@ public record GamePullRecordResult
     /// 百家乐
     /// </value>
     public string Gname { get; init; } = default!;
+    /// <summary>
+    /// The additional data
+    /// </summary>
+    public string AdditionalData { get; init; } = default!;
 }

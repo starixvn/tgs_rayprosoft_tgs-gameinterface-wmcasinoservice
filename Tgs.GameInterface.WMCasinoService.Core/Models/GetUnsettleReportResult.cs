@@ -76,4 +76,8 @@ public record GetUnsettleReportResult
     /// 游戏名称ex:百家乐
     /// </summary>
     public string Gname { get; init; } = default!;
+    /// <summary>
+    /// The additional data
+    /// </summary>
+    public string AdditionalData { get; init; } = default!;
 }

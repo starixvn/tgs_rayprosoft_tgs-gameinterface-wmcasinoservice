@@ -73,4 +73,8 @@ public record GameUnSettleResult
     /// 游戏名称 ex:百家乐
     /// </summary>
     public string Gname { get; init; } = default!;
+    /// <summary>
+    /// The additional data
+    /// </summary>
+    public string AdditionalData { get; init; } = default!;
 }

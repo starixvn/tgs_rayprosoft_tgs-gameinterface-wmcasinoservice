@@ -299,7 +299,8 @@ public class WMCasinoController : ControllerBase
                 Validbet = item.Validbet,
                 Water = item.Water,
                 Waterbet = item.Waterbet,
-                WinLoss = item.WinLoss
+                WinLoss = item.WinLoss,
+                AdditionalData = item.AdditionalData
             };
         }
     }
@@ -355,6 +356,7 @@ public class WMCasinoController : ControllerBase
                 Subround = item.Subround,
                 TableId = item.TableId,
                 User = item.User,
+                AdditionalData = item.AdditionalData
             };
         }
     }
