@@ -284,7 +284,8 @@ internal class GameApiClient : IGameApiClient
                         Reset = result.GetProperty("reset").ToString(),
                         BetResult = result.GetProperty("betResult").ToString(),
                         GameResult = result.GetProperty("gameResult").ToString(),
-                        Gname = result.GetProperty("gname").ToString()
+                        Gname = result.GetProperty("gname").ToString(),
+                        AdditionalData = result.ToString()
                     }).ToArray()
                 };
         }
@@ -451,7 +452,8 @@ internal class GameApiClient : IGameApiClient
                         Commission = result.GetProperty("commission").ToString(),
                         Round = result.GetProperty("round").ToString(),
                         SubRound = result.GetProperty("subround").ToString(),
-                        Gname = result.GetProperty("gname").ToString()
+                        Gname = result.GetProperty("gname").ToString(),
+                        AdditionalData = result.ToString()
                     }).ToArray()
                 };
         }

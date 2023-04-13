@@ -43,7 +43,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         _gameUnsettleService = gameUnsettleService ?? throw new ArgumentNullException(nameof(gameUnsettleService));
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceReply> CreatePlayer(GameInterfaceWMCasinoServiceCreatePlayerRequest request, ServerCallContext context)
+    public override async Task<Reply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)
     {
         await _createPlayerService.ExecuteAsync(new CreatePlayerCommand(
                    new(request.ApiUrl),
@@ -53,13 +53,13 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
                    request.Password,
                    request.UserName)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceReply()
+        return new Reply()
         {
             Success = true
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceFundReply> FundIn(GameInterfaceWMCasinoServiceFundRequest request, ServerCallContext context)
+    public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)
     {
         var result = await _fundInService.GetAsync(new FundInQuery(
             new(request.ApiUrl),
@@ -69,7 +69,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.TransactionId,
             request.Amount)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceFundReply()
+        return new FundReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -79,7 +79,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceFundOrderReply> FundOrder(GameInterfaceWMCasinoServiceFundOrderRequest request, ServerCallContext context)
+    public override async Task<FundOrderReply> FundOrder(FundOrderRequest request, ServerCallContext context)
     {
         var result = await _memberTradeService.QueryAsync(new MemberTradeQuery(
             new Uri(request.ApiUrl),
@@ -92,7 +92,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.GameProviderTransactionId
         )).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceWMCasinoServiceFundOrderReply();
+        var reply = new FundOrderReply();
 
         if (result is null)
         {
@@ -101,7 +101,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceWMCasinoServiceFundOrder()
+            reply.Items.Add(new FundOrder()
             {
                 AddTime = transaction.AddTime.ToTimestamp(),
                 Mid = transaction.Mid,
@@ -117,7 +117,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         return reply;
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceFundReply> FundOut(GameInterfaceWMCasinoServiceFundRequest request, ServerCallContext context)
+    public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
     {
         var result = await _fundOutService.GetAsync(new FundOutQuery(
             new(request.ApiUrl),
@@ -127,7 +127,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.TransactionId,
             request.Amount)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceFundReply()
+        return new FundReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -137,7 +137,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceGamePullRecordReply> GamePullRecord(GameInterfaceWMCasinoServiceGamePullRecordeRequest request, ServerCallContext context)
+    public override async Task<GamePullRecordReply> GamePullRecord(GamePullRecordeRequest request, ServerCallContext context)
     {
         var result = await _gamePullService.QueryAsync(new GamePullRecordQuery(
             new Uri(request.ApiUrl),
@@ -147,7 +147,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.EndTime.ToDateTimeOffset()
         )).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceWMCasinoServiceGamePullRecordReply();
+        var reply = new GamePullRecordReply();
 
         if (result is null)
         {
@@ -156,39 +156,40 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
         foreach (var record in result)
         {
-            reply.Items.Add(new GameInterfaceWMCasinoServiceGamePullRecord()
+            reply.Items.Add(new GamePullRecord()
             {
+                User = record.User,
+                BetId = record.BetId,
+                BetTime = record.BetTime.ToTimestamp(),
                 BeforeCash = record.BeforeCash,
                 Bet = record.Bet,
-                BetCode = record.BetCode,
-                BetId = record.BetId,
-                BetResult = record.BetResult,
-                BetTime = record.BetTime.ToTimestamp(),
-                Commission = record.Commission,
-                Event = record.Event,
-                EventChild = record.EventChild,
-                GameResult = record.GameResult,
-                Gid = record.Gid,
-                Gname = record.Gname,
-                Ip = record.Ip,
-                Reset = record.Reset,
-                Result = record.Result,
-                Round = record.Round,
-                Settime = record.Settime.ToTimestamp(),
-                Subround = record.Subround,
-                TableId = record.TableId,
-                User = record.User,
                 Validbet = record.Validbet,
                 Water = record.Water,
+                Result = record.Result,
+                BetCode = record.BetCode,
                 Waterbet = record.Waterbet,
-                Winloss = record.WinLoss
+                Winloss = record.WinLoss,
+                Ip = record.Ip,
+                Gid = record.Gid,
+                Event = record.Event,
+                EventChild = record.EventChild,
+                Round = record.Round,
+                Subround = record.Subround,
+                TableId = record.TableId,
+                Commission = record.Commission,
+                Settime = record.Settime.ToTimestamp(),
+                Reset = record.Reset,
+                BetResult = record.BetResult,
+                GameResult = record.GameResult,
+                Gname = record.Gname,
+                AdditionalData = record.AdditionalData,
             });
         };
 
         return reply;
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceGameUnsettleRecordReply> GameUnsettle(GameInterfaceWMCasinoServiceGameUnsettleRequest request, ServerCallContext context)
+    public override async Task<GameUnsettleRecordReply> GameUnsettle(GameUnsettleRequest request, ServerCallContext context)
     {
         var result = await _gameUnsettleService.QueryAsync(new GameUnSettleQuery(
             new Uri(request.ApiUrl),
@@ -197,7 +198,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.Time.ToDateTimeOffset()
         )).ToArrayAsync().ConfigureAwait(false);
 
-        var reply = new GameInterfaceWMCasinoServiceGameUnsettleRecordReply();
+        var reply = new GameUnsettleRecordReply();
 
         if (result is null)
         {
@@ -206,21 +207,29 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
         foreach (var transaction in result)
         {
-            reply.Items.Add(new GameInterfaceWMCasinoServiceGameUnsettleRecord()
+            reply.Items.Add(new GameUnsettleRecord()
             {
-                TableId = transaction.TableId,
-                Bet = transaction.Bet,
+                User = transaction.User,
                 BetId = transaction.BetId,
-                BetResult = transaction.BetResult,
+                Gid = transaction.Gid,
+                Event = transaction.Event,
+                EventChild = transaction.EventChild,
                 BetTime = transaction.BetTime.ToTimestamp(),
+                BetResult = transaction.BetResult,
+                Bet = transaction.Bet,
+                TableId = transaction.TableId,
                 Commission = transaction.Commission,
+                Round = transaction.Round,
+                Subround = transaction.Subround,
+                Gname = transaction.Gname,
+                AdditionalData = transaction.AdditionalData,
             });
         };
 
         return reply;
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceGameUrlReply> GameUrl(GameInterfaceWMCasinoServiceGameUrlRequest request, ServerCallContext context)
+    public override async Task<GameUrlReply> GameUrl(GameUrlRequest request, ServerCallContext context)
     {
         var result = await _gameUrlService.GetAsync(new GameUrlQuery(
             ApiUrl: new(request.ApiUrl),
@@ -231,7 +240,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             Language: request.Language
             )).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceGameUrlReply()
+        return new GameUrlReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -240,14 +249,14 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceAgentBalanceReply> GetAgentBalance(GameInterfaceWMCasinoServiceAgentBalanceRequest request, ServerCallContext context)
+    public override async Task<AgentBalanceReply> GetAgentBalance(AgentBalanceRequest request, ServerCallContext context)
     {
         var result = await _agentBalanceService.GetAsync(new AgentBalanceQuery(
             new(request.ApiUrl),
             request.VendorId,
             request.Signature)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceAgentBalanceReply()
+        return new AgentBalanceReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -255,7 +264,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceBalanceReply> GetBalance(GameInterfaceWMCasinoServiceBalanceRequest request, ServerCallContext context)
+    public override async Task<BalanceReply> GetBalance(BalanceRequest request, ServerCallContext context)
     {
         var result = await _balanceService.GetAsync(new BalanceQuery(
             new(request.ApiUrl),
@@ -263,7 +272,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.Signature,
             request.User)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceBalanceReply()
+        return new BalanceReply()
         {
             Success = result.Success,
             Message = result.Message ?? string.Empty,
@@ -272,7 +281,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         };
     }
 
-    public override async Task<GameInterfaceWMCasinoServiceReply> KickPlayer(GameInterfaceWMCasinoServiceKickPlayerRequest request, ServerCallContext context)
+    public override async Task<Reply> KickPlayer(KickPlayerRequest request, ServerCallContext context)
     {
         await _logoutService.ExecuteAsync(new LogoutCommand(
             new(request.ApiUrl),
@@ -280,7 +289,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
             request.Signature,
             request.User)).ConfigureAwait(false);
 
-        return new GameInterfaceWMCasinoServiceReply()
+        return new Reply()
         {
             Success = true
         };

@@ -57,7 +57,8 @@ internal class GamePullRecordGetService : IQueryService<GamePullRecordQuery, Gam
                 Validbet = item.Validbet,
                 Water = item.Water,
                 Waterbet = item.Waterbet,
-                WinLoss = item.WinLoss
+                WinLoss = item.WinLoss,
+                AdditionalData = item.AdditionalData,
             };
         }
     }

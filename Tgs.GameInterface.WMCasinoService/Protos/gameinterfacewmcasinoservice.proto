@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 import "phoenix/protobuf/decimal.proto";
 import "google/protobuf/timestamp.proto";
@@ -10,20 +10,20 @@ package gameinterfacewmcasinoservice;
 // The greeting service definition.
 service GameInterfaceWMCasinoService {
 	// Sends a greeting
-	rpc CreatePlayer (GameInterfaceWMCasinoServiceCreatePlayerRequest) returns (GameInterfaceWMCasinoServiceReply);
-	rpc FundIn (GameInterfaceWMCasinoServiceFundRequest) returns (GameInterfaceWMCasinoServiceFundReply);
-	rpc FundOrder (GameInterfaceWMCasinoServiceFundOrderRequest) returns (GameInterfaceWMCasinoServiceFundOrderReply);
-	rpc FundOut (GameInterfaceWMCasinoServiceFundRequest) returns (GameInterfaceWMCasinoServiceFundReply);
-	rpc GetBalance (GameInterfaceWMCasinoServiceBalanceRequest) returns (GameInterfaceWMCasinoServiceBalanceReply);
-	rpc GetAgentBalance (GameInterfaceWMCasinoServiceAgentBalanceRequest) returns (GameInterfaceWMCasinoServiceAgentBalanceReply);
-	rpc KickPlayer (GameInterfaceWMCasinoServiceKickPlayerRequest) returns (GameInterfaceWMCasinoServiceReply);
-	rpc KickAllPlayer (GameInterfaceWMCasinoServiceKickAllPlayersRequest) returns (GameInterfaceWMCasinoServiceReply);
-	rpc GameUrl (GameInterfaceWMCasinoServiceGameUrlRequest) returns (GameInterfaceWMCasinoServiceGameUrlReply);
-	rpc GamePullRecord (GameInterfaceWMCasinoServiceGamePullRecordeRequest) returns (GameInterfaceWMCasinoServiceGamePullRecordReply);
-	rpc GameUnsettle (GameInterfaceWMCasinoServiceGameUnsettleRequest) returns (GameInterfaceWMCasinoServiceGameUnsettleRecordReply);		
+	rpc CreatePlayer (CreatePlayerRequest) returns (Reply);
+	rpc FundIn (FundRequest) returns (FundReply);
+	rpc FundOrder (FundOrderRequest) returns (FundOrderReply);
+	rpc FundOut (FundRequest) returns (FundReply);
+	rpc GetBalance (BalanceRequest) returns (BalanceReply);
+	rpc GetAgentBalance (AgentBalanceRequest) returns (AgentBalanceReply);
+	rpc KickPlayer (KickPlayerRequest) returns (Reply);
+	rpc KickAllPlayer (KickAllPlayersRequest) returns (Reply);
+	rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
+	rpc GamePullRecord (GamePullRecordeRequest) returns (GamePullRecordReply);
+	rpc GameUnsettle (GameUnsettleRequest) returns (GameUnsettleRecordReply);		
 }
 
-message GameInterfaceWMCasinoServiceCreatePlayerRequest {
+message CreatePlayerRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -32,7 +32,7 @@ message GameInterfaceWMCasinoServiceCreatePlayerRequest {
 	string user_name = 6;
 }
 
-message GameInterfaceWMCasinoServiceFundRequest {
+message FundRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -41,7 +41,7 @@ message GameInterfaceWMCasinoServiceFundRequest {
 	phoenix.protobuf.DecimalValue amount = 6;
 }
 
-message GameInterfaceWMCasinoServiceFundOrderRequest {
+message FundOrderRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -52,33 +52,33 @@ message GameInterfaceWMCasinoServiceFundOrderRequest {
 	string game_provider_transaction_id = 8;
 }
 
-message GameInterfaceWMCasinoServiceBalanceRequest {
+message BalanceRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
 	string user = 4;
 }
 
-message GameInterfaceWMCasinoServiceAgentBalanceRequest {
+message AgentBalanceRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;	
 }
 
-message GameInterfaceWMCasinoServiceKickPlayerRequest {
+message KickPlayerRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
 	string user = 4;
 }
 
-message GameInterfaceWMCasinoServiceKickAllPlayersRequest {
+message KickAllPlayersRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;	
 }
 
-message GameInterfaceWMCasinoServiceGameUrlRequest {
+message GameUrlRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -87,7 +87,7 @@ message GameInterfaceWMCasinoServiceGameUrlRequest {
 	int32  language = 6;
 }
 
-message GameInterfaceWMCasinoServiceGamePullRecordeRequest {
+message GamePullRecordeRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -95,7 +95,7 @@ message GameInterfaceWMCasinoServiceGamePullRecordeRequest {
     google.protobuf.Timestamp end_time = 5;
 }
 
-message GameInterfaceWMCasinoServiceGameUnsettleRequest {
+message GameUnsettleRequest {
 	string api_url = 1;
 	string vendor_id = 2;
 	string signature = 3;
@@ -104,11 +104,11 @@ message GameInterfaceWMCasinoServiceGameUnsettleRequest {
 
 
 // The response message containing the greetings.
-message GameInterfaceWMCasinoServiceReply {
+message Reply {
 	bool success = 1;
 }
 
-message GameInterfaceWMCasinoServiceFundReply {
+message FundReply {
 	bool success = 1;
 	string message = 2;
 	string game_provider_transaction_id = 3;	
@@ -116,11 +116,11 @@ message GameInterfaceWMCasinoServiceFundReply {
 	phoenix.protobuf.DecimalValue current_balance = 5;
 }
 
-message GameInterfaceWMCasinoServiceFundOrderReply {
-	repeated GameInterfaceWMCasinoServiceFundOrder items = 1;
+message FundOrderReply {
+	repeated FundOrder items = 1;
 }
 
-message GameInterfaceWMCasinoServiceFundOrder {
+message FundOrder {
 	string order_id = 1;
 	google.protobuf.Timestamp add_time = 2;
 	string mid = 3;
@@ -131,32 +131,32 @@ message GameInterfaceWMCasinoServiceFundOrder {
 	string user = 8;
 }
 
-message GameInterfaceWMCasinoServiceBalanceReply {
+message BalanceReply {
 	bool success = 1;
 	bool is_player_exist = 2;
 	string message = 3;
 	phoenix.protobuf.DecimalValue balance = 4;
 }
 
-message GameInterfaceWMCasinoServiceAgentBalanceReply {
+message AgentBalanceReply {
 	bool success = 1;	
 	string message = 2;
 	phoenix.protobuf.DecimalValue balance = 3;
 }
 
-message GameInterfaceWMCasinoServiceGameUrlReply {
+message GameUrlReply {
 	bool success = 1;
 	bool is_player_exist = 2;
 	string message = 3;
 	string game_url = 4;
 }
 
-message GameInterfaceWMCasinoServiceGamePullRecordReply {
-	repeated GameInterfaceWMCasinoServiceGamePullRecord items = 1;
+message GamePullRecordReply {
+	repeated GamePullRecord items = 1;
 }
 
 
-message GameInterfaceWMCasinoServiceGamePullRecord {
+message GamePullRecord {
 	string user = 1;
 	string bet_id = 2;
 	google.protobuf.Timestamp bet_time = 3;
@@ -181,13 +181,14 @@ message GameInterfaceWMCasinoServiceGamePullRecord {
 	string bet_result = 22;
 	string game_result = 23;
 	string gname = 24;
+	string additional_data = 25;
 }
 
-message GameInterfaceWMCasinoServiceGameUnsettleRecordReply {
-	repeated GameInterfaceWMCasinoServiceGameUnsettleRecord items = 1;
+message GameUnsettleRecordReply {
+	repeated GameUnsettleRecord items = 1;
 }
 
-message GameInterfaceWMCasinoServiceGameUnsettleRecord {
+message GameUnsettleRecord {
 	string user = 1;
 	string bet_id = 2;
 	string gid = 3;
@@ -201,4 +202,5 @@ message GameInterfaceWMCasinoServiceGameUnsettleRecord {
 	string round = 11;
 	string subround = 12;
 	string gname = 13;
+	string additional_data = 14;
 }

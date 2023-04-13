@@ -4,14 +4,10 @@
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.5</Version>
+		<Version>1.0.6</Version>
 		<Authors>Raypro</Authors>
 		<Description>Tgs GameInterface WMCasinoService Client</Description>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Remove="Protos\gameinterfacewmcasinoservice.proto" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.52.0" />
@@ -24,7 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\gameinterfacewmcasinoservice.proto" GrpcServices="Client" />
+	  <Protobuf Include="..\Tgs.GameInterface.WMCasinoService\Protos\gameinterfacewmcasinoservice.proto">
+	    <Link>gameinterfacewmcasinoservice.proto</Link>
+	  </Protobuf>
 	</ItemGroup>
 
 </Project>

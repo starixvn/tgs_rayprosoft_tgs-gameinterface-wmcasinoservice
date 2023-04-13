@@ -45,6 +45,7 @@ internal class GameUnSettleGetService : IQueryService<GameUnSettleQuery, GameUnS
                 Subround = item.SubRound,
                 TableId = item.TableId,
                 User = item.User,
+                AdditionalData = result.ToString()
             };
         }
     }
