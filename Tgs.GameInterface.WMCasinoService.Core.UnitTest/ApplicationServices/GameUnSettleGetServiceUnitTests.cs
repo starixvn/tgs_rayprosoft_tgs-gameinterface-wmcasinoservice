@@ -51,7 +51,8 @@ public class GameUnSettleGetServiceUnitTests
                     Commission = "0",
                     Round = "113055702",
                     SubRound = "50",
-                    Gname = "百家乐"
+                    Gname = "百家乐",
+                    AdditionalData="{\"betId\":\"179229337\"}"
                 }
             }
         };
@@ -68,5 +69,6 @@ public class GameUnSettleGetServiceUnitTests
 
         Assert.IsNotNull(actual);
         Assert.AreEqual(1, actual.Length);
+        Assert.AreEqual(result.Result.Single().AdditionalData, actual.Single().AdditionalData);
     }
 }
