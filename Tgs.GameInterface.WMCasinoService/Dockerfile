@@ -8,7 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BuildConfiguration=Release
 WORKDIR /src
-COPY ["NuGet.config", "."]
+COPY ["nuget.config", "."]
 COPY ["Tgs.GameInterface.WMCasinoService/Tgs.GameInterface.WMCasinoService.csproj", "Tgs.GameInterface.WMCasinoService/"]
 COPY ["Tgs.GameInterface.WMCasinoService.Core/Tgs.GameInterface.WMCasinoService.Core.csproj", "Tgs.GameInterface.WMCasinoService.Core/"]
 RUN dotnet restore "Tgs.GameInterface.WMCasinoService/Tgs.GameInterface.WMCasinoService.csproj"

@@ -20,7 +20,8 @@ service GameInterfaceWMCasinoService {
 	rpc KickAllPlayer (KickAllPlayersRequest) returns (Reply);
 	rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
 	rpc GamePullRecord (GamePullRecordeRequest) returns (GamePullRecordReply);
-	rpc GameUnsettle (GameUnsettleRequest) returns (GameUnsettleRecordReply);		
+	rpc GameUnsettle (GameUnsettleRequest) returns (GameUnsettleRecordReply);
+	rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 
 message CreatePlayerRequest {
@@ -102,6 +103,9 @@ message GameUnsettleRequest {
 	google.protobuf.Timestamp time = 4; 
 }
 
+message CheckingServiceRequest{
+    string machine_name = 1;
+}
 
 // The response message containing the greetings.
 message Reply {
@@ -203,4 +207,8 @@ message GameUnsettleRecord {
 	string subround = 12;
 	string gname = 13;
 	string additional_data = 14;
+}
+
+message CheckingServiceReply{
+    string machine_name = 1;
 }

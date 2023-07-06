@@ -16,10 +16,12 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
     private readonly IQueryService<GamePullRecordQuery, GamePullRecordResult> _gamePullService;
     private readonly IQueryService<GameUnSettleQuery, GameUnSettleResult> _gameUnsettleService;
     private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
+    private readonly ILogger<GameInterfaceWMCasinoGrpcService> _logger;
     private readonly ICommandService<LogoutCommand> _logoutService;
     private readonly IQueryService<MemberTradeQuery, MemberTradeResult> _memberTradeService;
 
     public GameInterfaceWMCasinoGrpcService(
+        ILogger<GameInterfaceWMCasinoGrpcService> logger,
         IGetService<FundInQuery, FundInResult> fundInService,
         IQueryService<MemberTradeQuery, MemberTradeResult> memberTradeService,
         IGetService<FundOutQuery, FundOutResult> fundOutService,
@@ -31,6 +33,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         IQueryService<GamePullRecordQuery, GamePullRecordResult> gamePullService,
         IQueryService<GameUnSettleQuery, GameUnSettleResult> gameUnsettleService)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
         _memberTradeService = memberTradeService ?? throw new ArgumentNullException(nameof(memberTradeService));
         _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
@@ -41,6 +44,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
         _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
         _gamePullService = gamePullService ?? throw new ArgumentNullException(nameof(gamePullService));
         _gameUnsettleService = gameUnsettleService ?? throw new ArgumentNullException(nameof(gameUnsettleService));
+    }
+
+    public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
+    {
+        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+
+        return Task.FromResult(new CheckingServiceReply
+        {
+            MachineName = Environment.MachineName
+        });
     }
 
     public override async Task<Reply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)

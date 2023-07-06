@@ -53,12 +53,8 @@ internal class GameApiClient : IGameApiClient
                             retryTime);
                     });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken))
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -98,12 +94,8 @@ internal class GameApiClient : IGameApiClient
             ["signature"] = request.Signature
         };
 
-        var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -135,12 +127,8 @@ internal class GameApiClient : IGameApiClient
             ["user"] = request.User
         };
 
-        var document = await PostAsync(apiUrl, parameters, "GetBalance", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "GetBalance", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -238,12 +226,8 @@ internal class GameApiClient : IGameApiClient
                             retryTime);
                     });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken))
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -330,12 +314,8 @@ internal class GameApiClient : IGameApiClient
         if (request.EndTime != null)
             parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
-        var document = await PostAsync(apiUrl, parameters, "GetMemberTradeReport", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "GetMemberTradeReport", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -419,12 +399,8 @@ internal class GameApiClient : IGameApiClient
                             retryTime);
                     });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken));
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken))
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -501,7 +477,10 @@ internal class GameApiClient : IGameApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
+            responseMessage = await sr
+                .ReadToEndAsync(
+                cancellationToken: cancellationToken)
+                .ConfigureAwait(false) ?? string.Empty;
         }
 
         var apiLogEvent = new GameApiLogEvent
@@ -541,12 +520,8 @@ internal class GameApiClient : IGameApiClient
             ["signature"] = request.Signature,
             ["user"] = request.User == null ? string.Empty : request.User.ToString()
         };
-        var document = await PostAsync(apiUrl, parameters, "LogoutGame", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "LogoutGame", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -578,12 +553,8 @@ internal class GameApiClient : IGameApiClient
             ["username"] = request.Username
         };
 
-        var document = await PostAsync(apiUrl, parameters, "MemberRegister", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "MemberRegister", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -616,12 +587,8 @@ internal class GameApiClient : IGameApiClient
             ["lang"] = request.Lang.ToString()
         };
 
-        var document = await PostAsync(apiUrl, parameters, "SigninGame", cancellationToken);
-
-        if (document is null)
-        {
-            throw new Exception("Document is empty.");
-        }
+        var document = await PostAsync(apiUrl, parameters, "SigninGame", cancellationToken)
+            ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
@@ -682,7 +649,10 @@ internal class GameApiClient : IGameApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr.ReadToEndAsync().ConfigureAwait(false) ?? string.Empty;
+            responseMessage = await sr
+                .ReadToEndAsync(
+                cancellationToken:cancellationToken)
+                .ConfigureAwait(false) ?? string.Empty;
         }
 
         var apiLogEvent = new GameApiLogEvent

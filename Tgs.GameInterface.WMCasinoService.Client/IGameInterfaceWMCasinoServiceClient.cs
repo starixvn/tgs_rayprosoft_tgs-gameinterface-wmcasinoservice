@@ -4,6 +4,8 @@ namespace Tgs.GameInterface.WMCasinoService.Client;
 
 public interface IGameInterfaceWMCasinoServiceClient
 {
+    ValueTask<string> CheckingServiceAsync(string machineName, CancellationToken cancellationToken = default);
+
     ValueTask CreatePlayerAsync(Uri apiUrl, string vendorId, string signature, string user, string password, string userName, CancellationToken cancellationToken = default);
 
     ValueTask<FundReply> FundInAsync(Uri apiUrl, string vendorId, string signature, string user, string transactionId, decimal amount, CancellationToken cancellationToken = default);
