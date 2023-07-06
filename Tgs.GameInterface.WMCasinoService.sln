@@ -9,13 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoService.Core.UnitTest", "Tgs.GameInterface.WMCasinoService.Core.UnitTest\Tgs.GameInterface.WMCasinoService.Core.UnitTest.csproj", "{53516CDB-1094-48EA-B283-4C28059AF3FF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{086209D8-18D7-4FE8-807E-D9ADBE3404C7}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		NuGet.config = NuGet.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoService", "Tgs.GameInterface.WMCasinoService\Tgs.GameInterface.WMCasinoService.csproj", "{8B105B97-30B7-42AE-BC87-8C870CF9A41E}"
 EndProject
 Global
