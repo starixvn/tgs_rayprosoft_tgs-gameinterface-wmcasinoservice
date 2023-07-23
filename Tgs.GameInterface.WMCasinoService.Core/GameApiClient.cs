@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -127,8 +128,18 @@ internal class GameApiClient : IGameApiClient
             ["user"] = request.User
         };
 
-        var document = await PostAsync(apiUrl, parameters, "GetBalance", cancellationToken)
-            ?? throw new Exception("Document is empty.");
+
+        var document = await PostAsync(
+            apiUrl,
+            parameters,
+            "GetBalance", 
+            cancellationToken)
+            .AsTask()
+            .WaitAsync(
+            timeout: TimeSpan.FromSeconds(15),
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
+            ?? throw new Exception("Document is empty."); ;
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
 
