@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -35,26 +34,30 @@ internal class GameApiClient : IGameApiClient
 
         var retryCount = 3;
 
-        var retryPolicy =
-            Policy
-                .HandleResult<JsonDocument>(r =>
-                    {
-                        var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
-                        return errorCode is 10804;
-                    })
-                .WaitAndRetryAsync(
-                    retryCount,
-                    retryAttempt => TimeSpan.FromSeconds(5),
-                    (result, retryTime, context) =>
-                    {
-                        _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                            DateTime.Now.ToString("o"),
-                            parameters,
-                            result,
-                            retryTime);
-                    });
+        var retryPolicy = Policy.HandleResult<JsonDocument>(r =>
+        {
+            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32();
+            return errorCode is 10804;
+        })
+            .WaitAndRetryAsync(
+            retryCount,
+            retryAttempt => TimeSpan.FromSeconds(5),
+            (result, retryTime, context) =>
+            {
+                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                    DateTime.Now.ToString("o"),
+                    parameters,
+                    result,
+                    retryTime);
+            });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "ChangeBalance", cancellationToken))
+        var document = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
+                apiUrl: apiUrl,
+                parameters: parameters,
+                logPrefix: "ChangeBalance",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document.RootElement.GetProperty("errorCode").GetInt32();
@@ -95,7 +98,12 @@ internal class GameApiClient : IGameApiClient
             ["signature"] = request.Signature
         };
 
-        var document = await PostAsync(apiUrl, parameters, "GetAgentBalance", cancellationToken)
+        var document = await PostAsync(
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "GetAgentBalance",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -128,12 +136,11 @@ internal class GameApiClient : IGameApiClient
             ["user"] = request.User
         };
 
-
         var document = await PostAsync(
-            apiUrl,
-            parameters,
-            "GetBalance", 
-            cancellationToken)
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "GetBalance",
+            cancellationToken: cancellationToken)
             .AsTask()
             .WaitAsync(
             timeout: TimeSpan.FromSeconds(15),
@@ -207,37 +214,41 @@ internal class GameApiClient : IGameApiClient
 
         var retryCount = 3;
         var retryMaxSeconds = 0;
-        var retryPolicy =
-            Policy
-                .HandleResult<JsonDocument>(r =>
-                {
-                    var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
-                    ?? throw new Exception("Get Date Time Report Failed");
-                    if (errorCode is not 10411 and not 10202)
-                    {
-                        return false;
-                    }
+        var retryPolicy = Policy.HandleResult<JsonDocument>(r =>
+        {
+            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
+            ?? throw new Exception("Get Date Time Report Failed");
+            if (errorCode is not 10411 and not 10202)
+            {
+                return false;
+            }
 
-                    retryMaxSeconds = errorCode switch
-                    {
-                        10411 => 30,
-                        _ => 10
-                    };
-                    return true;
-                })
-                .WaitAndRetryAsync(
-                    retryCount,
-                    retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
-                    (result, retryTime, context) =>
-                    {
-                        _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                            DateTime.Now.ToString("o"),
-                            parameters,
-                            result,
-                            retryTime);
-                    });
+            retryMaxSeconds = errorCode switch
+            {
+                10411 => 30,
+                _ => 10
+            };
+            return true;
+        })
+            .WaitAndRetryAsync(
+            retryCount,
+            retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
+            (result, retryTime, context) =>
+            {
+                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                    DateTime.Now.ToString("o"),
+                    parameters,
+                    result,
+                    retryTime);
+            });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetDateTimeReport", cancellationToken))
+        var document = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
+                apiUrl: apiUrl,
+                parameters: parameters,
+                logPrefix: "GetDateTimeReport",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document.RootElement.GetProperty("errorCode").GetInt32();
@@ -325,7 +336,12 @@ internal class GameApiClient : IGameApiClient
         if (request.EndTime != null)
             parameters.Add("endTime", request.EndTime.Value.ToString("yyyyMMddHHmmss"));
 
-        var document = await PostAsync(apiUrl, parameters, "GetMemberTradeReport", cancellationToken)
+        var document = await PostAsync(
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "GetMemberTradeReport",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -380,37 +396,41 @@ internal class GameApiClient : IGameApiClient
 
         var retryCount = 3;
         var retryMaxSeconds = 0;
-        var retryPolicy =
-            Policy
-                .HandleResult<JsonDocument>(r =>
-                {
-                    var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
-                    ?? throw new Exception("Get Unsettle Report Failed");
-                    if (errorCode is not 10411 and not 10202)
-                    {
-                        return false;
-                    }
+        var retryPolicy = Policy.HandleResult<JsonDocument>(r =>
+        {
+            var errorCode = r?.RootElement.GetProperty("errorCode").GetInt32()
+            ?? throw new Exception("Get Unsettle Report Failed");
+            if (errorCode is not 10411 and not 10202)
+            {
+                return false;
+            }
 
-                    retryMaxSeconds = errorCode switch
-                    {
-                        10411 => 30,
-                        _ => 10
-                    };
-                    return true;
-                })
-                .WaitAndRetryAsync(
-                    retryCount,
-                    retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
-                    (result, retryTime, context) =>
-                    {
-                        _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
-                            DateTime.Now.ToString("o"),
-                            parameters,
-                            result,
-                            retryTime);
-                    });
+            retryMaxSeconds = errorCode switch
+            {
+                10411 => 30,
+                _ => 10
+            };
+            return true;
+        })
+            .WaitAndRetryAsync(
+            retryCount,
+            retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
+            (result, retryTime, context) =>
+            {
+                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                    DateTime.Now.ToString("o"),
+                    parameters,
+                    result,
+                    retryTime);
+            });
 
-        var document = await retryPolicy.ExecuteAsync(async () => await PostAsync(apiUrl, parameters, "GetUnsettleReport", cancellationToken))
+        var document = await retryPolicy.ExecuteAsync(
+            async () => await PostAsync(
+                apiUrl: apiUrl,
+                parameters: parameters,
+                logPrefix: "GetUnsettleReport",
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false))
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -480,7 +500,11 @@ internal class GameApiClient : IGameApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(apiUrl, content, cancellationToken);
+        var httpResponseMessage = await _client.PostAsync(
+            requestUri: apiUrl,
+            content: content,
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
         sw.Stop();
 
@@ -488,8 +512,7 @@ internal class GameApiClient : IGameApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr
-                .ReadToEndAsync(
+            responseMessage = await sr.ReadToEndAsync(
                 cancellationToken: cancellationToken)
                 .ConfigureAwait(false) ?? string.Empty;
         }
@@ -531,7 +554,12 @@ internal class GameApiClient : IGameApiClient
             ["signature"] = request.Signature,
             ["user"] = request.User == null ? string.Empty : request.User.ToString()
         };
-        var document = await PostAsync(apiUrl, parameters, "LogoutGame", cancellationToken)
+        var document = await PostAsync(
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "LogoutGame",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -564,7 +592,12 @@ internal class GameApiClient : IGameApiClient
             ["username"] = request.Username
         };
 
-        var document = await PostAsync(apiUrl, parameters, "MemberRegister", cancellationToken)
+        var document = await PostAsync(
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "MemberRegister",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -598,7 +631,12 @@ internal class GameApiClient : IGameApiClient
             ["lang"] = request.Lang.ToString()
         };
 
-        var document = await PostAsync(apiUrl, parameters, "SigninGame", cancellationToken)
+        var document = await PostAsync(
+            apiUrl: apiUrl,
+            parameters: parameters,
+            logPrefix: "SigninGame",
+            cancellationToken: cancellationToken)
+            .ConfigureAwait(false)
             ?? throw new Exception("Document is empty.");
 
         var errorCode = document!.RootElement.GetProperty("errorCode").GetInt32();
@@ -652,7 +690,11 @@ internal class GameApiClient : IGameApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(apiUrl, content, cancellationToken);
+        var httpResponseMessage = await _client.PostAsync(
+            apiUrl,
+            content,
+            cancellationToken)
+            .ConfigureAwait(false);
 
         sw.Stop();
 
@@ -660,9 +702,8 @@ internal class GameApiClient : IGameApiClient
 
         using (var sr = new StreamReader(httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken).Result))
         {
-            responseMessage = await sr
-                .ReadToEndAsync(
-                cancellationToken:cancellationToken)
+            responseMessage = await sr.ReadToEndAsync(
+                cancellationToken: cancellationToken)
                 .ConfigureAwait(false) ?? string.Empty;
         }
 
