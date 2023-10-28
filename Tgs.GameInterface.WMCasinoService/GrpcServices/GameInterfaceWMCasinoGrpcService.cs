@@ -58,13 +58,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<Reply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)
     {
-        await _createPlayerService.ExecuteAsync(new CreatePlayerCommand(
-                   new(request.ApiUrl),
-                   request.VendorId,
-                   request.Signature,
-                   request.User,
-                   request.Password,
-                   request.UserName)).ConfigureAwait(false);
+        await _createPlayerService.ExecuteAsync(
+            command: new CreatePlayerCommand(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User,
+                Password: request.Password,
+                Username: request.UserName),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new Reply()
         {
@@ -74,13 +77,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)
     {
-        var result = await _fundInService.GetAsync(new FundInQuery(
-            new(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.User,
-            request.TransactionId,
-            request.Amount)).ConfigureAwait(false);
+        var result = await _fundInService.GetAsync(
+            query: new FundInQuery(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User,
+                TransactionId: request.TransactionId,
+                Amount: request.Amount),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new FundReply()
         {
@@ -94,16 +100,20 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundOrderReply> FundOrder(FundOrderRequest request, ServerCallContext context)
     {
-        var result = await _memberTradeService.QueryAsync(new MemberTradeQuery(
-            new Uri(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.StartTime.ToDateTimeOffset(),
-            request.EndTime.ToDateTimeOffset(),
-            request.User,
-            request.TransactionId,
-            request.GameProviderTransactionId
-        )).ToArrayAsync().ConfigureAwait(false);
+        var result = await _memberTradeService.QueryAsync(
+            query: new MemberTradeQuery(
+                ApiUrl: new Uri(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                StartTime: request.StartTime.ToDateTimeOffset(),
+                EndTime: request.EndTime.ToDateTimeOffset(),
+                User: request.User,
+                TransactionId: request.TransactionId,
+                GameProviderTransactionId: request.GameProviderTransactionId),
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         var reply = new FundOrderReply();
 
@@ -132,13 +142,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
     {
-        var result = await _fundOutService.GetAsync(new FundOutQuery(
-            new(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.User,
-            request.TransactionId,
-            request.Amount)).ConfigureAwait(false);
+        var result = await _fundOutService.GetAsync(
+            query: new FundOutQuery(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User,
+                TransactionId: request.TransactionId,
+                Amount: request.Amount),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new FundReply()
         {
@@ -152,13 +165,17 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GamePullRecordReply> GamePullRecord(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _gamePullService.QueryAsync(new GamePullRecordQuery(
-            new Uri(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.StartTime.ToDateTimeOffset(),
-            request.EndTime.ToDateTimeOffset()
-        )).ToArrayAsync().ConfigureAwait(false);
+        var result = await _gamePullService.QueryAsync(
+            query: new GamePullRecordQuery(
+                ApiUrl: new Uri(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                StartTime: request.StartTime.ToDateTimeOffset(),
+                EndTime: request.EndTime.ToDateTimeOffset()),
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         var reply = new GamePullRecordReply();
 
@@ -204,12 +221,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GameUnsettleRecordReply> GameUnsettle(GameUnsettleRequest request, ServerCallContext context)
     {
-        var result = await _gameUnsettleService.QueryAsync(new GameUnSettleQuery(
-            new Uri(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.Time.ToDateTimeOffset()
-        )).ToArrayAsync().ConfigureAwait(false);
+        var result = await _gameUnsettleService.QueryAsync(
+            query: new GameUnSettleQuery(
+                ApiUrl: new Uri(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                Time: request.Time.ToDateTimeOffset()),
+            cancellationToken: context.CancellationToken)
+            .ToArrayAsync(
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         var reply = new GameUnsettleRecordReply();
 
@@ -244,14 +265,16 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GameUrlReply> GameUrl(GameUrlRequest request, ServerCallContext context)
     {
-        var result = await _gameUrlService.GetAsync(new GameUrlQuery(
-            ApiUrl: new(request.ApiUrl),
-            VendorId: request.VendorId,
-            Signature: request.Signature,
-            User: request.User,
-            Password: request.Password,
-            Language: request.Language
-            )).ConfigureAwait(false);
+        var result = await _gameUrlService.GetAsync(
+            query: new GameUrlQuery(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User,
+                Password: request.Password,
+                Language: request.Language),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new GameUrlReply()
         {
@@ -264,10 +287,13 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<AgentBalanceReply> GetAgentBalance(AgentBalanceRequest request, ServerCallContext context)
     {
-        var result = await _agentBalanceService.GetAsync(new AgentBalanceQuery(
-            new(request.ApiUrl),
-            request.VendorId,
-            request.Signature)).ConfigureAwait(false);
+        var result = await _agentBalanceService.GetAsync(
+            query: new AgentBalanceQuery(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new AgentBalanceReply()
         {
@@ -279,11 +305,14 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<BalanceReply> GetBalance(BalanceRequest request, ServerCallContext context)
     {
-        var result = await _balanceService.GetAsync(new BalanceQuery(
-            new(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.User)).ConfigureAwait(false);
+        var result = await _balanceService.GetAsync(
+            query: new BalanceQuery(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new BalanceReply()
         {
@@ -296,11 +325,14 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<Reply> KickPlayer(KickPlayerRequest request, ServerCallContext context)
     {
-        await _logoutService.ExecuteAsync(new LogoutCommand(
-            new(request.ApiUrl),
-            request.VendorId,
-            request.Signature,
-            request.User)).ConfigureAwait(false);
+        await _logoutService.ExecuteAsync(
+            command: new LogoutCommand(
+                ApiUrl: new(request.ApiUrl),
+                VendorId: request.VendorId,
+                Signature: request.Signature,
+                User: request.User),
+            cancellationToken: context.CancellationToken)
+            .ConfigureAwait(false);
 
         return new Reply()
         {
