@@ -4,15 +4,15 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>1.0.11</Version>
+		<Version>1.0.12</Version>
 		<Authors>Raypro</Authors>
 		<Description>Tgs GameInterface WMCasinoService Client</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.56.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.56.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.57.0">
+		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.58.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.58.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.59.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
