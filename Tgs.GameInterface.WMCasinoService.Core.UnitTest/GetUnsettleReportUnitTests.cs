@@ -49,7 +49,7 @@ public class GetUnsettleReportUnitTests
         var result = await client.GetUnsettleReportAsync(apiUrl, request);
 
         Assert.IsNotNull(result);
-        Assert.IsFalse(result.Result.Any());
+        Assert.IsFalse(result.Result.Length != 0);
     }
 
     [TestMethod]

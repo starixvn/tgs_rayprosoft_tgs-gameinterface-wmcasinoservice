@@ -3,15 +3,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class CreatePlayerCommandService : ICommandService<CreatePlayerCommand>
+internal class CreatePlayerCommandService(
+    IGameApiClient client) : ICommandService<CreatePlayerCommand>
 {
-    private readonly IGameApiClient _client;
-
-    public CreatePlayerCommandService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask ExecuteAsync(CreatePlayerCommand command, CancellationToken cancellationToken = default)
     {
         var request = new MemberRegisterRequest
@@ -22,7 +16,7 @@ internal class CreatePlayerCommandService : ICommandService<CreatePlayerCommand>
             User = command.User,
             Username = command.User
         };
-        _ = await _client
+        _ = await client
             .MemberRegisterAsync(command.ApiUrl, request, cancellationToken)
             .ConfigureAwait(false);
     }

@@ -101,7 +101,7 @@ public class GetDateTimeReportUnitTests
         var result = await client.GetDateTimeReportAsync(apiUrl, request);
 
         Assert.IsNotNull(result);
-        Assert.IsFalse(result.Result.Any());
+        Assert.IsFalse(result.Result.Length != 0);
     }
 
     [TestMethod]

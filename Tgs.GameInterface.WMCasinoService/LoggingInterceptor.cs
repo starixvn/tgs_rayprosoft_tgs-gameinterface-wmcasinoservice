@@ -3,19 +3,10 @@ using Grpc.Core.Interceptors;
 
 namespace Tgs.GameInterface.WMCasinoService;
 
-internal class LoggingInterceptor : Interceptor
+internal class LoggingInterceptor(
+    ILogger<LoggingInterceptor> logger,
+    DiagnosticsInterceptorOptions options) : Interceptor
 {
-    private readonly ILogger _logger;
-    private readonly DiagnosticsInterceptorOptions _options;
-
-    public LoggingInterceptor(
-        ILogger<LoggingInterceptor> logger,
-         DiagnosticsInterceptorOptions options)
-    {
-        _logger = logger;
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-    }
-
     public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
         TRequest request,
         ServerCallContext context,
@@ -24,12 +15,12 @@ internal class LoggingInterceptor : Interceptor
         var methodType = MethodType.Unary;
         var method = context.Method;
 
-        using var activity = _options.InterceptorActivitySource.StartActivity($"{methodType}.{method}");
+        using var activity = options.InterceptorActivitySource.StartActivity($"{methodType}.{method}");
         try
         {
             _ = activity?.Start();
 
-            _logger.LogInformation("TraceId:{traceId} LogOn:{logOn}  MethodType:{methodType} Method:{method} Request:{request}",
+            logger.LogInformation("TraceId:{traceId} LogOn:{logOn}  MethodType:{methodType} Method:{method} Request:{request}",
                 activity?.TraceId.ToString(),
                 DateTime.Now.ToString("o"),
                 methodType,
@@ -40,7 +31,7 @@ internal class LoggingInterceptor : Interceptor
 
             activity?.Stop();
 
-            _logger.LogInformation("TraceId:{traceId} LogOn:{logOn}  MethodType:{methodType} Method:{method} Spend:{spend:0.0000}ms Response:{response}",
+            logger.LogInformation("TraceId:{traceId} LogOn:{logOn}  MethodType:{methodType} Method:{method} Spend:{spend:0.0000}ms Response:{response}",
                 activity?.TraceId.ToString(),
                 DateTime.Now.ToString("o"),
                 methodType,
@@ -52,7 +43,7 @@ internal class LoggingInterceptor : Interceptor
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error thrown by {context.Method}.", method);
+            logger.LogError(ex, "Error thrown by {context.Method}.", method);
             throw;
         }
     }

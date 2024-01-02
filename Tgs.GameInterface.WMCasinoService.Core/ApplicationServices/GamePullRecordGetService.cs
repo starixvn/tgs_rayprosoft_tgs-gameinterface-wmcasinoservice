@@ -4,15 +4,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class GamePullRecordGetService : IQueryService<GamePullRecordQuery, GamePullRecordResult>
+internal class GamePullRecordGetService(
+    IGameApiClient client) : IQueryService<GamePullRecordQuery, GamePullRecordResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GamePullRecordGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<GamePullRecordResult> QueryAsync(GamePullRecordQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = new GetDateTimeReportRequest
@@ -23,11 +17,11 @@ internal class GamePullRecordGetService : IQueryService<GamePullRecordQuery, Gam
             EndTime = query.EndTime
         };
 
-        var result = await _client
+        var result = await client
             .GetDateTimeReportAsync(query.ApiUrl, request, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result is null || result.Result.Any() is false)
+        if (result is null || result.Result.Length == 0)
             yield break;
 
         foreach (var item in result.Result)

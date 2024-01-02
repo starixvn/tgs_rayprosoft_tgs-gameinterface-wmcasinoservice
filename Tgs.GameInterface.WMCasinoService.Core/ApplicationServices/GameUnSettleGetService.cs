@@ -4,15 +4,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class GameUnSettleGetService : IQueryService<GameUnSettleQuery, GameUnSettleResult>
+internal class GameUnSettleGetService(
+    IGameApiClient client) : IQueryService<GameUnSettleQuery, GameUnSettleResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameUnSettleGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<GameUnSettleResult> QueryAsync(GameUnSettleQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = new GetUnsettleReportRequest
@@ -21,11 +15,11 @@ internal class GameUnSettleGetService : IQueryService<GameUnSettleQuery, GameUnS
             Signature = query.Signature,
             Time = query.Time
         };
-        var result = await _client
+        var result = await client
             .GetUnsettleReportAsync(query.ApiUrl, request, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result is null || result.Result.Any() is false)
+        if (result is null || result.Result.Length == 0)
             yield break;
 
         foreach (var item in result.Result)

@@ -4,15 +4,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class MemberTradeGetService : IQueryService<MemberTradeQuery, MemberTradeResult>
+internal class MemberTradeGetService(
+    IGameApiClient client) : IQueryService<MemberTradeQuery, MemberTradeResult>
 {
-    private readonly IGameApiClient _client;
-
-    public MemberTradeGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async IAsyncEnumerable<MemberTradeResult> QueryAsync(MemberTradeQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = new GetMemberTradeReportRequest
@@ -26,11 +20,11 @@ internal class MemberTradeGetService : IQueryService<MemberTradeQuery, MemberTra
             Order = query.TransactionId
         };
 
-        var result = await _client
+        var result = await client
             .GetMemberTradeReportAsync(query.ApiUrl, request, cancellationToken)
             .ConfigureAwait(false);
 
-        if (result is null || result.Result.Any() is false)
+        if (result is null || result.Result.Length == 0)
             yield break;
 
         foreach (var item in result.Result)

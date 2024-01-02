@@ -36,9 +36,9 @@ public class GameUnSettleGetServiceUnitTests
         {
             ErrorCode = 0,
             ErrorMessage = "操作成功",
-            Result = new GetUnsettleReportResult[]
-            {
-                new GetUnsettleReportResult
+            Result =
+            [
+                new()
                 {
                     User = "4ucmqplxb029",
                     BetId = "179229337",
@@ -52,9 +52,9 @@ public class GameUnSettleGetServiceUnitTests
                     Round = "113055702",
                     SubRound = "50",
                     Gname = "百家乐",
-                    AdditionalData="{\"betId\":\"179229337\"}"
+                    AdditionalData = "{\"betId\":\"179229337\"}"
                 }
-            }
+            ]
         };
 
         _ = fakeClient

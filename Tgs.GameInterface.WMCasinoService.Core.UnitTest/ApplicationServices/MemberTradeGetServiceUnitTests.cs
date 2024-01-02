@@ -36,9 +36,9 @@ public class MemberTradeGetServiceUnitTests
         {
             ErrorCode = 0,
             ErrorMessage = "操作成功",
-            Result = new GetMemberTradeReportResult[]
-            {
-                new GetMemberTradeReportResult
+            Result =
+            [
+                new()
                 {
                     OrderId = "2147647425",
                     AddTime = DateTimeOffset.Parse("2022-06-13 09:53:57"),
@@ -49,7 +49,7 @@ public class MemberTradeGetServiceUnitTests
                     OrderNum = "",
                     User = "4ucmqplxb029"
                 },
-                new GetMemberTradeReportResult
+                new()
                 {
                     OrderId = "2147647426",
                     AddTime = DateTimeOffset.Parse("2022-06-13 09:55:10"),
@@ -60,7 +60,7 @@ public class MemberTradeGetServiceUnitTests
                     OrderNum = "101_113053285_5",
                     User = "4ucmqplxb029"
                 }
-            }
+            ]
         };
 
         _ = fakeClient.GetMemberTradeReportAsync(Arg.Any<Uri>(), Arg.Any<GetMemberTradeReportRequest>()).Returns(result);

@@ -3,15 +3,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class LogoutCommandService : ICommandService<LogoutCommand>
+internal class LogoutCommandService(
+    IGameApiClient client) : ICommandService<LogoutCommand>
 {
-    private readonly IGameApiClient _client;
-
-    public LogoutCommandService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask ExecuteAsync(LogoutCommand command, CancellationToken cancellationToken = default)
     {
         var request = new LogoutGameRequest
@@ -21,7 +15,7 @@ internal class LogoutCommandService : ICommandService<LogoutCommand>
             User = command.User
         };
 
-        _ = await _client.LogoutGameAsync(
+        _ = await client.LogoutGameAsync(
             command.ApiUrl,
             request,
             cancellationToken).ConfigureAwait(false);

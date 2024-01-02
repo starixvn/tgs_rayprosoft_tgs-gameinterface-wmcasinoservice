@@ -47,9 +47,9 @@ public class GamePullRecordGetServiceUnitTests
         {
             ErrorCode = 0,
             ErrorMessage = "操作成功",
-            Result = new GetDateTimeReportResult[]
-            {
-                new GetDateTimeReportResult
+            Result =
+            [
+                new()
                 {
                     User = "4ucmqplxb029",
                     BetId = "179229652",
@@ -76,7 +76,7 @@ public class GamePullRecordGetServiceUnitTests
                     GameResult = "龙:♦2 虎:♠5",
                     Gname = "龙虎"
                 }
-            }
+            ]
         };
 
         _ = fakeClient.GetDateTimeReportAsync(Arg.Is(apiUrl), Arg.Is(request)).Returns(result);

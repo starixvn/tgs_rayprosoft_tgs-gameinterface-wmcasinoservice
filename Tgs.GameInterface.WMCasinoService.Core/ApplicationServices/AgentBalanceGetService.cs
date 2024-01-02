@@ -3,15 +3,9 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
-internal class AgentBalanceGetService : IGetService<AgentBalanceQuery, AgentBalanceResult>
+internal class AgentBalanceGetService(
+    IGameApiClient client) : IGetService<AgentBalanceQuery, AgentBalanceResult>
 {
-    private readonly IGameApiClient _client;
-
-    public AgentBalanceGetService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<AgentBalanceResult> GetAsync(AgentBalanceQuery query, CancellationToken cancellationToken = default)
     {
         var request = new GetAgentBalanceRequest
@@ -19,7 +13,7 @@ internal class AgentBalanceGetService : IGetService<AgentBalanceQuery, AgentBala
             VendorId = query.VendorId,
             Signature = query.Signature
         };
-        var result = await _client.GetAgentBalanceAsync(
+        var result = await client.GetAgentBalanceAsync(
             query.ApiUrl,
             request,
             cancellationToken).ConfigureAwait(false);

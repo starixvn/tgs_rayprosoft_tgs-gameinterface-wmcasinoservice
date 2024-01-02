@@ -7,19 +7,10 @@ using Tgs.GameInterface.WMCasinoService.Core.Models;
 
 namespace Tgs.GameInterface.WMCasinoService.Core;
 
-internal class GameApiClient : IGameApiClient
+internal class GameApiClient(
+    ILogger<GameApiClient> logger,
+    HttpClient client) : IGameApiClient
 {
-    private readonly HttpClient _client;
-    private readonly ILogger<GameApiClient> _logger;
-
-    public GameApiClient(
-        ILogger<GameApiClient> logger,
-        HttpClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
     public async ValueTask<ChangeBalanceResponse> ChangeBalanceAsync(Uri apiUrl, ChangeBalanceRequest request, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
@@ -44,7 +35,7 @@ internal class GameApiClient : IGameApiClient
             retryAttempt => TimeSpan.FromSeconds(5),
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -79,7 +70,7 @@ internal class GameApiClient : IGameApiClient
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").ToString();
-            _logger.LogError("Change Balance Failed, errorCode:{errorCode}, errorMessage:{errorMessage} ", errorCode, errorMessage);
+            logger.LogError("Change Balance Failed, errorCode:{errorCode}, errorMessage:{errorMessage} ", errorCode, errorMessage);
             return new ChangeBalanceResponse
             {
                 Success = false,
@@ -121,7 +112,7 @@ internal class GameApiClient : IGameApiClient
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("GetAgentBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("GetAgentBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Get Agent Balance Failed");
         }
     }
@@ -175,7 +166,7 @@ internal class GameApiClient : IGameApiClient
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("GetBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("GetBalance Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Get Balance Failed");
         }
     }
@@ -235,7 +226,7 @@ internal class GameApiClient : IGameApiClient
             retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -301,13 +292,13 @@ internal class GameApiClient : IGameApiClient
             {
                 ErrorCode = document.RootElement.GetProperty("errorCode").GetInt32(),
                 ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                Result = Array.Empty<GetDateTimeReportResult>()
+                Result = []
             };
         }
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("GetDateTimeReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("GetDateTimeReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Get Date Time Report Failed");
         }
     }
@@ -373,13 +364,13 @@ internal class GameApiClient : IGameApiClient
             {
                 ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
                 ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                Result = Array.Empty<GetMemberTradeReportResult>()
+                Result = []
             };
         }
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("GetMemberTradeReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("GetMemberTradeReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Get Member Trade Report Failed");
         }
     }
@@ -417,7 +408,7 @@ internal class GameApiClient : IGameApiClient
             retryAttempt => TimeSpan.FromSeconds(retryMaxSeconds),
             (result, retryTime, context) =>
             {
-                _logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
+                logger.LogWarning("LogOn:{logOn}  Parameter:{parameters} Result:{result} Delay:{retryTime}",
                     DateTime.Now.ToString("o"),
                     parameters,
                     result,
@@ -470,13 +461,13 @@ internal class GameApiClient : IGameApiClient
             {
                 ErrorCode = document!.RootElement.GetProperty("errorCode").GetInt32(),
                 ErrorMessage = document.RootElement.GetProperty("errorMessage").GetString()!,
-                Result = Array.Empty<GetUnsettleReportResult>()
+                Result = []
             };
         }
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("GetUnsettleReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("GetUnsettleReport Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Get Unsettle Report Failed");
         }
     }
@@ -500,7 +491,7 @@ internal class GameApiClient : IGameApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(
+        var httpResponseMessage = await client.PostAsync(
             requestUri: apiUrl,
             content: content,
             cancellationToken: cancellationToken)
@@ -531,7 +522,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 
@@ -575,7 +566,7 @@ internal class GameApiClient : IGameApiClient
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("LogoutGame Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("LogoutGame Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Logout Game Failed");
         }
     }
@@ -614,7 +605,7 @@ internal class GameApiClient : IGameApiClient
         else
         {
             var errorMessage = document.RootElement.GetProperty("errorMessage").GetString();
-            _logger.LogError("MemberRegister Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
+            logger.LogError("MemberRegister Failed, ErrorCode:{errorCode}, ErrorMessage:{errorMessage}", errorCode, errorMessage);
             throw new Exception("Member Register Failed");
         }
     }
@@ -690,7 +681,7 @@ internal class GameApiClient : IGameApiClient
             CharSet = "UTF-8"
         };
 
-        var httpResponseMessage = await _client.PostAsync(
+        var httpResponseMessage = await client.PostAsync(
             apiUrl,
             content,
             cancellationToken)
@@ -721,7 +712,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 

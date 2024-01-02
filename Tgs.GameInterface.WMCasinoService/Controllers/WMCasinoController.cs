@@ -269,7 +269,7 @@ public class WMCasinoController : ControllerBase
             .ToArrayAsync()
             .ConfigureAwait(false);
 
-        if (!result.Any())
+        if (result.Length == 0)
             yield break;
 
         foreach (var item in result)
@@ -336,7 +336,7 @@ public class WMCasinoController : ControllerBase
             .ToArrayAsync()
             .ConfigureAwait(false);
 
-        if (!result.Any())
+        if (result.Length == 0)
             yield break;
 
         foreach (var item in result)
@@ -396,7 +396,7 @@ public class WMCasinoController : ControllerBase
             .ToArrayAsync()
             .ConfigureAwait(false);
 
-        if (!result.Any())
+        if (result.Length == 0)
             yield break;
 
         foreach (var item in result)

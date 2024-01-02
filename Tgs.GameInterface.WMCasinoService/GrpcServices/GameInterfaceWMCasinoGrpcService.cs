@@ -6,49 +6,22 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.WMCasinoService.GrpcServices;
 
-public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.GameInterfaceWMCasinoServiceBase
+public class GameInterfaceWMCasinoGrpcService(
+    ILogger<GameInterfaceWMCasinoGrpcService> logger,
+    IGetService<FundInQuery, FundInResult> fundInService,
+    IQueryService<MemberTradeQuery, MemberTradeResult> memberTradeService,
+    IGetService<FundOutQuery, FundOutResult> fundOutService,
+    IGetService<BalanceQuery, BalanceResult> balanceService,
+    IGetService<AgentBalanceQuery, AgentBalanceResult> agentBalanceService,
+    ICommandService<LogoutCommand> logoutService,
+    ICommandService<CreatePlayerCommand> createPlayerService,
+    IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
+    IQueryService<GamePullRecordQuery, GamePullRecordResult> gamePullService,
+    IQueryService<GameUnSettleQuery, GameUnSettleResult> gameUnsettleService) : GameInterfaceWMCasinoService.GameInterfaceWMCasinoServiceBase
 {
-    private readonly IGetService<AgentBalanceQuery, AgentBalanceResult> _agentBalanceService;
-    private readonly IGetService<BalanceQuery, BalanceResult> _balanceService;
-    private readonly ICommandService<CreatePlayerCommand> _createPlayerService;
-    private readonly IGetService<FundInQuery, FundInResult> _fundInService;
-    private readonly IGetService<FundOutQuery, FundOutResult> _fundOutService;
-    private readonly IQueryService<GamePullRecordQuery, GamePullRecordResult> _gamePullService;
-    private readonly IQueryService<GameUnSettleQuery, GameUnSettleResult> _gameUnsettleService;
-    private readonly IGetService<GameUrlQuery, GameUrlResult> _gameUrlService;
-    private readonly ILogger<GameInterfaceWMCasinoGrpcService> _logger;
-    private readonly ICommandService<LogoutCommand> _logoutService;
-    private readonly IQueryService<MemberTradeQuery, MemberTradeResult> _memberTradeService;
-
-    public GameInterfaceWMCasinoGrpcService(
-        ILogger<GameInterfaceWMCasinoGrpcService> logger,
-        IGetService<FundInQuery, FundInResult> fundInService,
-        IQueryService<MemberTradeQuery, MemberTradeResult> memberTradeService,
-        IGetService<FundOutQuery, FundOutResult> fundOutService,
-        IGetService<BalanceQuery, BalanceResult> balanceService,
-        IGetService<AgentBalanceQuery, AgentBalanceResult> agentBalanceService,
-        ICommandService<LogoutCommand> logoutService,
-        ICommandService<CreatePlayerCommand> createPlayerService,
-        IGetService<GameUrlQuery, GameUrlResult> gameUrlService,
-        IQueryService<GamePullRecordQuery, GamePullRecordResult> gamePullService,
-        IQueryService<GameUnSettleQuery, GameUnSettleResult> gameUnsettleService)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
-        _memberTradeService = memberTradeService ?? throw new ArgumentNullException(nameof(memberTradeService));
-        _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
-        _balanceService = balanceService ?? throw new ArgumentNullException(nameof(balanceService));
-        _agentBalanceService = agentBalanceService ?? throw new ArgumentNullException(nameof(agentBalanceService));
-        _logoutService = logoutService ?? throw new ArgumentNullException(nameof(logoutService));
-        _createPlayerService = createPlayerService ?? throw new ArgumentNullException(nameof(createPlayerService));
-        _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
-        _gamePullService = gamePullService ?? throw new ArgumentNullException(nameof(gamePullService));
-        _gameUnsettleService = gameUnsettleService ?? throw new ArgumentNullException(nameof(gameUnsettleService));
-    }
-
     public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
     {
-        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+        logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
 
         return Task.FromResult(new CheckingServiceReply
         {
@@ -58,7 +31,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<Reply> CreatePlayer(CreatePlayerRequest request, ServerCallContext context)
     {
-        await _createPlayerService.ExecuteAsync(
+        await createPlayerService.ExecuteAsync(
             command: new CreatePlayerCommand(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -77,7 +50,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)
     {
-        var result = await _fundInService.GetAsync(
+        var result = await fundInService.GetAsync(
             query: new FundInQuery(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -100,7 +73,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundOrderReply> FundOrder(FundOrderRequest request, ServerCallContext context)
     {
-        var result = await _memberTradeService.QueryAsync(
+        var result = await memberTradeService.QueryAsync(
             query: new MemberTradeQuery(
                 ApiUrl: new Uri(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -142,7 +115,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
     {
-        var result = await _fundOutService.GetAsync(
+        var result = await fundOutService.GetAsync(
             query: new FundOutQuery(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -165,7 +138,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GamePullRecordReply> GamePullRecord(GamePullRecordeRequest request, ServerCallContext context)
     {
-        var result = await _gamePullService.QueryAsync(
+        var result = await gamePullService.QueryAsync(
             query: new GamePullRecordQuery(
                 ApiUrl: new Uri(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -221,7 +194,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GameUnsettleRecordReply> GameUnsettle(GameUnsettleRequest request, ServerCallContext context)
     {
-        var result = await _gameUnsettleService.QueryAsync(
+        var result = await gameUnsettleService.QueryAsync(
             query: new GameUnSettleQuery(
                 ApiUrl: new Uri(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -265,7 +238,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<GameUrlReply> GameUrl(GameUrlRequest request, ServerCallContext context)
     {
-        var result = await _gameUrlService.GetAsync(
+        var result = await gameUrlService.GetAsync(
             query: new GameUrlQuery(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -287,7 +260,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<AgentBalanceReply> GetAgentBalance(AgentBalanceRequest request, ServerCallContext context)
     {
-        var result = await _agentBalanceService.GetAsync(
+        var result = await agentBalanceService.GetAsync(
             query: new AgentBalanceQuery(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -305,7 +278,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<BalanceReply> GetBalance(BalanceRequest request, ServerCallContext context)
     {
-        var result = await _balanceService.GetAsync(
+        var result = await balanceService.GetAsync(
             query: new BalanceQuery(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
@@ -325,7 +298,7 @@ public class GameInterfaceWMCasinoGrpcService : GameInterfaceWMCasinoService.Gam
 
     public override async Task<Reply> KickPlayer(KickPlayerRequest request, ServerCallContext context)
     {
-        await _logoutService.ExecuteAsync(
+        await logoutService.ExecuteAsync(
             command: new LogoutCommand(
                 ApiUrl: new(request.ApiUrl),
                 VendorId: request.VendorId,
