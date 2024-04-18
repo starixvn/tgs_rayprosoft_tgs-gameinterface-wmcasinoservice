@@ -8,13 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+		<PackageReference Include="JunitXml.TestLogger" Version="3.1.12" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.3.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
 		<PackageReference Include="NSubstitute" Version="5.1.0" />
 		<PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
-		<PackageReference Include="coverlet.collector" Version="6.0.0">
+		<PackageReference Include="coverlet.collector" Version="6.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -23,6 +23,14 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Tgs.GameInterface.WMCasinoService.Core\Tgs.GameInterface.WMCasinoService.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EditorConfigFiles Remove="D:\00.Git\tgs-gameinterface-wmcasinoservice\Tgs.GameInterface.WMCasinoService.Core.UnitTest\.editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="D:\00.Git\tgs-gameinterface-wmcasinoservice\Tgs.GameInterface.WMCasinoService.Core.UnitTest\.editorconfig" />
 	</ItemGroup>
 
 </Project>

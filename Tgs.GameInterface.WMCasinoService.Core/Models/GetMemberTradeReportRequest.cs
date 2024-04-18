@@ -8,38 +8,38 @@
 /// </summary>
 public record GetMemberTradeReportRequest
 {
-    /// <summary>
-    /// 代理商(aid)
-    /// </summary>
-    public string VendorId { get; init; } = default!;
-    /// <summary>
-    /// 代理商标识符
-    /// </summary>
-    public string Signature { get; init; } = default!;
-    /// <summary>
-    /// 帐号
-    /// </summary>
-    public string? User { get; init; }
-    /// <summary>
-    /// WMCasino对该次交易纪录的编号
-    /// </summary>
-    public string? OrderId { get; init; }
-    /// <summary>
-    /// PG对该次交易纪录自定的订单编号
-    /// </summary>
-    public string? Order { get; init; }
-    /// <summary>
-    /// Gets the start time.
-    /// </summary>
-    /// <value>
-    /// The start time.
-    /// </value>
-    public DateTimeOffset? StartTime { get; init; }
-    /// <summary>
-    /// Gets the end time.
-    /// </summary>
-    /// <value>
-    /// The end time.
-    /// </value>
-    public DateTimeOffset? EndTime { get; init; }
+	/// <summary>
+	/// 代理商(aid)
+	/// </summary>
+	public string VendorId { get; init; } = default!;
+	/// <summary>
+	/// 代理商标识符
+	/// </summary>
+	public string Signature { get; init; } = default!;
+	/// <summary>
+	/// 帐号
+	/// </summary>
+	public string? User { get; init; }
+	/// <summary>
+	/// WMCasino对该次交易纪录的编号
+	/// </summary>
+	public string? OrderId { get; init; }
+	/// <summary>
+	/// PG对该次交易纪录自定的订单编号
+	/// </summary>
+	public string? Order { get; init; }
+	/// <summary>
+	/// Gets the start time.
+	/// </summary>
+	/// <value>
+	/// The start time.
+	/// </value>
+	public DateTimeOffset? StartTime { get; init; }
+	/// <summary>
+	/// Gets the end time.
+	/// </summary>
+	/// <value>
+	/// The end time.
+	/// </value>
+	public DateTimeOffset? EndTime { get; init; }
 }

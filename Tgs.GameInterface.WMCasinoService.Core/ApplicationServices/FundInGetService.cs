@@ -4,29 +4,29 @@ using Tgs.ServiceUtility;
 namespace Tgs.GameInterface.WMCasinoService.Core.ApplicationServices;
 
 internal class FundInGetService(
-    IGameApiClient client) : IGetService<FundInQuery, FundInResult>
+	IGameApiClient client) : IGetService<FundInQuery, FundInResult>
 {
-    public async ValueTask<FundInResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
-    {
-        var request = new ChangeBalanceRequest
-        {
-            VendorId = query.VendorId,
-            Signature = query.Signature,
-            User = query.User,
-            Money = -query.Amount,
-            Order = query.TransactionId
-        };
+	public async ValueTask<FundInResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
+	{
+		var request = new ChangeBalanceRequest
+		{
+			VendorId = query.VendorId,
+			Signature = query.Signature,
+			User = query.User,
+			Money = -query.Amount,
+			Order = query.TransactionId
+		};
 
-        var result = await client.ChangeBalanceAsync(
-            query.ApiUrl,
-            request,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+		var result = await client.ChangeBalanceAsync(
+			query.ApiUrl,
+			request,
+			cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return new FundInResult(
-            Success: result.Success,
-            Message: result.Message,
-            GameProviderTransactionId: result.GameProviderTransactionId,
-            TransactionId: result.TransactionId,
-            CurrentBalance: result.CurrentBalance);
-    }
+		return new FundInResult(
+			Success: result.Success,
+			Message: result.Message,
+			GameProviderTransactionId: result.GameProviderTransactionId,
+			TransactionId: result.TransactionId,
+			CurrentBalance: result.CurrentBalance);
+	}
 }

@@ -6,45 +6,45 @@
 /// </summary>
 public record GetDateTimeReportRequest
 {
-    /// <summary>
-    /// 代理商(aid)
-    /// </summary>
-    public string VendorId { get; init; } = default!;
-    /// <summary>
-    /// 代理商标识符
-    /// </summary>
-    public string Signature { get; init; } = default!;
-    /// <summary>
-    /// 帐号
-    /// </summary>
-    /// <value>
-    /// wmtf_{playerCode}_{brandCode}
-    /// </value>
-    public string? User { get; init; }
-    /// <summary>
-    /// Gets the start time.
-    /// </summary>
-    /// <value>
-    /// The start time.
-    /// </value>
-    public DateTimeOffset StartTime { get; init; } = default!;
-    /// <summary>
-    /// Gets the end time.
-    /// </summary>
-    /// <value>
-    /// The end time.
-    /// </value>
-    public DateTimeOffset EndTime { get; init; }
-    /// <summary>
-    /// 0:抓下注时间, 1:抓结算时间
-    /// </summary>
-    public int? TimeType { get; init; }
-    /// <summary>
-    /// 0:输赢报表, 1:小费报表, 2:全部
-    /// </summary>
-    public int? DataType { get; init; }
-    /// <summary>
-    /// 期数
-    /// </summary>
-    public int? GameNo1 { get; init; }
+	/// <summary>
+	/// 代理商(aid)
+	/// </summary>
+	public string VendorId { get; init; } = default!;
+	/// <summary>
+	/// 代理商标识符
+	/// </summary>
+	public string Signature { get; init; } = default!;
+	/// <summary>
+	/// 帐号
+	/// </summary>
+	/// <value>
+	/// wmtf_{playerCode}_{brandCode}
+	/// </value>
+	public string? User { get; init; }
+	/// <summary>
+	/// Gets the start time.
+	/// </summary>
+	/// <value>
+	/// The start time.
+	/// </value>
+	public DateTimeOffset StartTime { get; init; } = default!;
+	/// <summary>
+	/// Gets the end time.
+	/// </summary>
+	/// <value>
+	/// The end time.
+	/// </value>
+	public DateTimeOffset EndTime { get; init; }
+	/// <summary>
+	/// 0:抓下注时间, 1:抓结算时间
+	/// </summary>
+	public int? TimeType { get; init; }
+	/// <summary>
+	/// 0:输赢报表, 1:小费报表, 2:全部
+	/// </summary>
+	public int? DataType { get; init; }
+	/// <summary>
+	/// 期数
+	/// </summary>
+	public int? GameNo1 { get; init; }
 }

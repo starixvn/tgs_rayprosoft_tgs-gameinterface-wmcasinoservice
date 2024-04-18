@@ -10,79 +10,79 @@ namespace Tgs.GameInterface.WMCasinoService.Core.UnitTest.ApplicationServices;
 [TestClass]
 public class BalanceGetServiceUnitTests
 {
-    [TestMethod]
-    public async Task Account_Is_Not_Exist()
-    {
-        var fakeClient = Substitute.For<IGameApiClient>();
+	[TestMethod]
+	public async Task Account_Is_Not_Exist()
+	{
+		var fakeClient = Substitute.For<IGameApiClient>();
 
-        var sut = new BalanceGetService(fakeClient);
+		var sut = new BalanceGetService(fakeClient);
 
-        var apiUrl = new Uri("http://localhost/");
-        var vedorId = "testVendorId";
-        var sign = "testsign";
-        var user = "4ucmqplxb028";
+		var apiUrl = new Uri("http://localhost/");
+		var vedorId = "testVendorId";
+		var sign = "testsign";
+		var user = "4ucmqplxb028";
 
-        var query = new BalanceQuery(apiUrl, vedorId, sign, user);
+		var query = new BalanceQuery(apiUrl, vedorId, sign, user);
 
-        var request = new GetBalanceRequest
-        {
-            VendorId = vedorId,
-            Signature = sign,
-            User = user
-        };
+		var request = new GetBalanceRequest
+		{
+			VendorId = vedorId,
+			Signature = sign,
+			User = user
+		};
 
-        var result = new GetBalanceResponse
-        {
-            ErrorCode = 10501,
-            Message = "查无此帐号,请检查",
-            IsPlayerExist = false,
-            Balance = null
-        };
+		var result = new GetBalanceResponse
+		{
+			ErrorCode = 10501,
+			Message = "查无此帐号,请检查",
+			IsPlayerExist = false,
+			Balance = null
+		};
 
-        _ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))
-            .Returns(result);
+		_ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))
+			.Returns(result);
 
-        var actual = await sut.GetAsync(query).ConfigureAwait(false);
+		var actual = await sut.GetAsync(query).ConfigureAwait(false);
 
-        Assert.IsFalse(actual.IsPlayerExist);
-        Assert.IsNull(actual.Balance);
-    }
+		Assert.IsFalse(actual.IsPlayerExist);
+		Assert.IsNull(actual.Balance);
+	}
 
-    [TestMethod]
-    public async Task Normal_Process()
-    {
-        var fakeClient = Substitute.For<IGameApiClient>();
+	[TestMethod]
+	public async Task Normal_Process()
+	{
+		var fakeClient = Substitute.For<IGameApiClient>();
 
-        var sut = new BalanceGetService(fakeClient);
+		var sut = new BalanceGetService(fakeClient);
 
-        var apiUrl = new Uri("http://localhost/");
-        var vedorId = "testVendorId";
-        var sign = "testsign";
-        var user = "wmtf_4ucmqplxb029_GPI";
+		var apiUrl = new Uri("http://localhost/");
+		var vedorId = "testVendorId";
+		var sign = "testsign";
+		var user = "wmtf_4ucmqplxb029_GPI";
 
-        var query = new BalanceQuery(apiUrl, vedorId, sign, user);
+		var query = new BalanceQuery(apiUrl, vedorId, sign, user);
 
-        var request = new GetBalanceRequest
-        {
-            VendorId = vedorId,
-            Signature = sign,
-            User = user
-        };
+		var request = new GetBalanceRequest
+		{
+			VendorId = vedorId,
+			Signature = sign,
+			User = user
+		};
 
-        var result = new GetBalanceResponse
-        {
-            ErrorCode = 0,
-            Message = "操作成功",
-            IsPlayerExist = true,
-            Balance = 168m
-        };
+		var result = new GetBalanceResponse
+		{
+			ErrorCode = 0,
+			Message = "操作成功",
+			IsPlayerExist = true,
+			Balance = 168m
+		};
 
-        _ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))
-            .Returns(result);
+		_ = fakeClient.GetBalanceAsync(Arg.Is(apiUrl), Arg.Is(request))
+			.Returns(result);
 
-        var actual = await sut.GetAsync(query).ConfigureAwait(false);
+		var actual = await sut.GetAsync(query).ConfigureAwait(false);
 
-        Assert.IsTrue(actual.IsPlayerExist);
-        Assert.AreEqual(168m, actual.Balance);
-    }
+		Assert.IsTrue(actual.IsPlayerExist);
+		Assert.AreEqual(168m, actual.Balance);
+	}
 }
