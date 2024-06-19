@@ -503,7 +503,7 @@ internal class GameApiClient(
 				.ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -677,9 +677,9 @@ internal class GameApiClient(
 		};
 
 		var httpResponseMessage = await client.PostAsync(
-			apiUrl,
-			content,
-			cancellationToken)
+			requestUri: apiUrl,
+			content: content,
+			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		sw.Stop();
@@ -693,7 +693,7 @@ internal class GameApiClient(
 				.ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
