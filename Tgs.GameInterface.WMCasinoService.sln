@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.WMCasinoService", "Tgs.GameInterface.WMCasinoService\Tgs.GameInterface.WMCasinoService.csproj", "{8B105B97-30B7-42AE-BC87-8C870CF9A41E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.WMCasinoService.Protos", "Tgs.GameInterface.WMCasinoService.Protos\Tgs.GameInterface.WMCasinoService.Protos.csproj", "{11EFA4B9-8168-4C10-885E-0AED45AA491D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B105B97-30B7-42AE-BC87-8C870CF9A41E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11EFA4B9-8168-4C10-885E-0AED45AA491D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11EFA4B9-8168-4C10-885E-0AED45AA491D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11EFA4B9-8168-4C10-885E-0AED45AA491D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11EFA4B9-8168-4C10-885E-0AED45AA491D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
