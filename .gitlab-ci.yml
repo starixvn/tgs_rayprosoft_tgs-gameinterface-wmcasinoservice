@@ -34,9 +34,26 @@ push-nuget:
       - Tgs.GameInterface.WMCasinoService.Client/bin/$BuildConfiguration/*.nupkg
 
 push-docker-image:
-  extends: .push-docker-image-template
+  stage: publish
+  needs:
+    - build-code
+    - unit-test
+  only:
+    - main
+  cache:
+    key: $BuildCacheKey
+    untracked: true   
+    policy: pull
   script:
-    - push_docker "Tgs.GameInterface.WMCasinoService" $ImageName $Tag
+    #- dotnet build "Tgs.GameInterface.WMCasinoService/Tgs.GameInterface.WMCasinoService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
+    #- dotnet publish "Tgs.GameInterface.WMCasinoService" 
+    #   --os linux --arch x64
+    #   /t:PublishContainer
+    #   -c $BuildConfiguration
+    #   /p:ContainerRepository=$ImageName
+    #   /p:ContainerImageTag=$Tag
+    - docker build -t "$ImageName:$Tag" --build-arg [BUILD_CONFIGURATION]=$BuildConfiguration -f "Tgs.GameInterface.WMCasinoService/Dockerfile" . --no-cache
+    - docker push $ImageName:$Tag
 
 push-k8s-template:
   extends: .push-k8s-template
